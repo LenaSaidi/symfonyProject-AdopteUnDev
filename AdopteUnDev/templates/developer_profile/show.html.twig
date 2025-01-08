@@ -1,0 +1,43 @@
+{# templates/developer_profile/show.html.twig #}
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ developerProfile.firstName }} {{ developerProfile.lastName }} - Profil{% endblock %}
+
+{% block body %}
+    <div class="profile-container">
+        <div class="profile-header">
+            <h1 class="developer-name">{{ developerProfile.firstName }} {{ developerProfile.lastName }} - Profil</h1>
+        </div>
+
+        <div class="profile-content">
+
+            <div class="profile-section">
+                <h2>Avatar</h2>
+                {% if developerProfile.avatar %}
+                    <img src="{{ asset('uploads/avatars/' ~ developerProfile.avatar) }}" alt="Avatar" class="developer-avatar-small" />
+                {% else %}
+                    <p>Aucun avatar téléchargé.</p>
+                {% endif %}
+            </div>
+
+            <div class="profile-section">
+                <h2>Description</h2>
+                <p><strong>Prénom :</strong> {{ developerProfile.firstName }}</p>
+                <p><strong>Nom :</strong> {{ developerProfile.lastName }}</p>
+                <p><strong>Localisation :</strong> {{ developerProfile.location }}</p>
+                <p><strong>Niveau d'expérience :</strong> {{ developerProfile.experienceLevel }} années</p>
+                <p><strong>Salaire minimum :</strong> {{ developerProfile.minSalary }} €</p>
+                <p><strong>Biographie :</strong> {{ developerProfile.bio ?: 'Aucune biographie disponible.' }}</p>
+                <p><strong>Langages de programmation :</strong> 
+                    {% for language in developerProfile.languages %}
+                        {{ language.name }}{% if not loop.last %}, {% endif %}
+                    {% endfor %}
+                </p>
+            </div>
+
+            <div class="profile-actions">
+                <a href="{{ path('developer_profile_edit', {id: developerProfile.id}) }}" class="btn btn-edit">Modifier le profil</a>
+            </div>
+        </div>
+    </div>
+{% endblock %}

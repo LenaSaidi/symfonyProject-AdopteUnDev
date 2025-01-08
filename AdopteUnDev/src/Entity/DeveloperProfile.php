@@ -16,7 +16,8 @@ class DeveloperProfile
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\OneToOne(inversedBy: 'DeveloperProfile', cascade: ['persist', 'remove'])]
+
+    #[ORM\OneToOne(cascade: ['persist', 'remove'])]
     #[ORM\JoinColumn(nullable: false)]
     private ?Users $user = null;
 
