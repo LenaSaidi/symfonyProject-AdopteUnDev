@@ -1,0 +1,21 @@
+{# templates/developer_profile/edit.html.twig #}
+{% extends 'base.html.twig' %}
+
+{% block title %}Modifier Profil - {{ developerProfile.firstName }} {% endblock %}
+
+{% block body %}
+    <div class="edit-profile-container">
+        <h1>Modifier mon profil</h1>
+        {{ form_start(form) }}
+            {{ form_row(form.firstName) }}
+            {{ form_row(form.lastName) }}
+            {{ form_row(form.location) }}
+            {{ form_row(form.experienceLevel) }}
+            {{ form_row(form.minSalary) }}
+            {{ form_row(form.bio) }}
+            {{ form_row(form.avatar) }}
+            {{ form_row(form.languages) }}
+            <button type="submit" class="btn btn-primary">Enregistrer</button>
+        {{ form_end(form) }}
+    </div>
+{% endblock %}

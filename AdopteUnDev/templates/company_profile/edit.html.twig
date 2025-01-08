@@ -1,0 +1,32 @@
+{# templates/company_profile/edit.html.twig #}
+{% extends 'base.html.twig' %}
+
+{% block title %}Edit Company Profile{% endblock %}
+
+{% block body %}
+    <div class="profile-container">
+        <div class="profile-header">
+            <h1>Edit Company Profile</h1>
+        </div>
+
+        <div class="profile-content">
+            {{ form_start(form) }}
+                <div class="profile-section">
+                    <h2>Company Information</h2>
+                    {{ form_row(form.companyName) }}
+                    {{ form_row(form.location) }}
+                    {{ form_row(form.description) }}
+                </div>
+
+                <div class="profile-section">
+                    <h2>Logo</h2>
+                    {{ form_row(form.logo) }}
+                </div>
+
+                <div class="profile-actions">
+                    <button type="submit" class="btn btn-edit">Submit</button>
+                </div>
+            {{ form_end(form) }}
+        </div>
+    </div>
+{% endblock %}

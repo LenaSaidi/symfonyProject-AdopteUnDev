@@ -44,7 +44,7 @@ class DeveloperProfileType extends AbstractType
             ])
             ->add('languages', EntityType::class, [
                 'class' => Language::class,
-                'choice_label' => 'name', // Affiche le champ "name" dans l'entité Language
+                'choice_label' => 'name',
                 'label' => 'Programming Languages',
                 'multiple' => true,
                 'expanded' => true, // Affiche des cases à cocher
