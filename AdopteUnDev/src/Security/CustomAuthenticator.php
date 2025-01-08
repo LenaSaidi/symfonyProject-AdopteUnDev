@@ -28,19 +28,22 @@ class CustomAuthenticator extends AbstractLoginFormAuthenticator
 
     public function authenticate(Request $request): Passport
     {
-        $email = $request->getPayload()->getString('email');
-
+        $email = $request->request->get('email');
+        $password = $request->request->get('password');
+        $csrfToken = $request->request->get('_csrf_token');
+    
         $request->getSession()->set(SecurityRequestAttributes::LAST_USERNAME, $email);
-
+    
         return new Passport(
             new UserBadge($email),
-            new PasswordCredentials($request->getPayload()->getString('password')),
+            new PasswordCredentials($password),
             [
-                new CsrfTokenBadge('authenticate', $request->getPayload()->getString('_csrf_token')),
+                new CsrfTokenBadge('authenticate', $csrfToken),
                 new RememberMeBadge(),
             ]
         );
     }
+    
 
     public function onAuthenticationSuccess(Request $request, TokenInterface $token, string $firewallName): ?Response
     {
@@ -49,7 +52,9 @@ class CustomAuthenticator extends AbstractLoginFormAuthenticator
         }
 
         // For example:
-        return new RedirectResponse($this->urlGenerator->generate(name:'post.index'));
+        return new RedirectResponse($this->urlGenerator->generate('developer_create'));
+
+
 
     }
 

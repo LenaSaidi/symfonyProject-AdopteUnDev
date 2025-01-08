@@ -1,20 +1,59 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello DeveloperProfileController!{% endblock %}
+{% block title %}Create Developer Profile{% endblock %}
 
 {% block body %}
-<style>
-    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
-    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
-</style>
+<h1>Create Developer Profile</h1>
 
-<div class="example-wrapper">
-    <h1>Hello {{ controller_name }}! ✅</h1>
+{{ form_start(form) }}
+    <div class="form-group">
+        {{ form_label(form.firstName, 'First Name') }}
+        {{ form_widget(form.firstName, { 'attr': {'class': 'form-control'} }) }}
+        {{ form_errors(form.firstName) }}
+    </div>
 
-    This friendly message is coming from:
-    <ul>
-        <li>Your controller at <code>C:/Users/Léna/Downloads/projects-programmation/PW-projet/symfonyProject-AdopteUnDev/AdopteUnDev/src/Controller/DeveloperProfileController.php</code></li>
-        <li>Your template at <code>C:/Users/Léna/Downloads/projects-programmation/PW-projet/symfonyProject-AdopteUnDev/AdopteUnDev/templates/developer_profile/index.html.twig</code></li>
-    </ul>
-</div>
+    <div class="form-group">
+        {{ form_label(form.lastName, 'Last Name') }}
+        {{ form_widget(form.lastName, { 'attr': {'class': 'form-control'} }) }}
+        {{ form_errors(form.lastName) }}
+    </div>
+
+    <div class="form-group">
+        {{ form_label(form.location, 'Location') }}
+        {{ form_widget(form.location, { 'attr': {'class': 'form-control'} }) }}
+        {{ form_errors(form.location) }}
+    </div>
+
+    <div class="form-group">
+        {{ form_label(form.experienceLevel, 'Experience Level (Years)') }}
+        {{ form_widget(form.experienceLevel, { 'attr': {'class': 'form-control'} }) }}
+        {{ form_errors(form.experienceLevel) }}
+    </div>
+
+    <div class="form-group">
+        {{ form_label(form.minSalary, 'Minimum Salary') }}
+        {{ form_widget(form.minSalary, { 'attr': {'class': 'form-control'} }) }}
+        {{ form_errors(form.minSalary) }}
+    </div>
+
+    <div class="form-group">
+        {{ form_label(form.bio, 'Biography') }}
+        {{ form_widget(form.bio, { 'attr': {'class': 'form-control', 'rows': 5} }) }}
+        {{ form_errors(form.bio) }}
+    </div>
+
+    <div class="form-group">
+        {{ form_label(form.avatar, 'Upload Avatar') }}
+        {{ form_widget(form.avatar, { 'attr': {'class': 'form-control-file'} }) }}
+        {{ form_errors(form.avatar) }}
+    </div>
+
+    <div class="form-group">
+        {{ form_label(form.languages, 'Programming Languages') }}
+        {{ form_widget(form.languages, { 'attr': {'class': 'form-check'} }) }}
+        {{ form_errors(form.languages) }}
+    </div>
+
+    <button type="submit" class="btn btn-primary">Save Profile</button>
+{{ form_end(form) }}
 {% endblock %}
