@@ -1,0 +1,27 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Résultats de Matching{% endblock %}
+
+{% block body %}
+    <h1>Profils Correspondants</h1>
+
+    {% if profiles is empty %}
+        <p>Aucun profil ne correspond à vos critères.</p>
+    {% else %}
+        <ul>
+            {% for profile in profiles %}
+                <li>
+                    <strong>{{ profile.firstName }} {{ profile.lastName }}</strong>
+                    <p>Lieu : {{ profile.location }}</p>
+                    <p>Technologies : 
+                        {% for tech in profile.technologies %}
+                            {{ tech.name }}{% if not loop.last %}, {% endif %}
+                        {% endfor %}
+                    </p>
+                    <p>Salaire minimum : {{ profile.minSalary }} €</p>
+                    <p>Niveau d'expérience : {{ profile.experienceLevel }}</p>
+                </li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+{% endblock %}

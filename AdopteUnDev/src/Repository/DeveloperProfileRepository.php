@@ -6,9 +6,6 @@ use App\Entity\DeveloperProfile;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
-/**
- * @extends ServiceEntityRepository<DeveloperProfile>
- */
 class DeveloperProfileRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
@@ -16,28 +13,31 @@ class DeveloperProfileRepository extends ServiceEntityRepository
         parent::__construct($registry, DeveloperProfile::class);
     }
 
-    //    /**
-    //     * @return DeveloperProfile[] Returns an array of DeveloperProfile objects
-    //     */
-    //    public function findByExampleField($value): array
-    //    {
-    //        return $this->createQueryBuilder('d')
-    //            ->andWhere('d.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->orderBy('d.id', 'ASC')
-    //            ->setMaxResults(10)
-    //            ->getQuery()
-    //            ->getResult()
-    //        ;
-    //    }
+    public function findMatchingProfiles(array $criteria): array
+    {
+        $qb = $this->createQueryBuilder('d');
+        
+        if (!empty($criteria['technologies'])) {
+            $qb->join('d.technologies', 't')
+               ->andWhere('t.name IN (:technologies)')
+               ->setParameter('technologies', $criteria['technologies']);
+        }
 
-    //    public function findOneBySomeField($value): ?DeveloperProfile
-    //    {
-    //        return $this->createQueryBuilder('d')
-    //            ->andWhere('d.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->getQuery()
-    //            ->getOneOrNullResult()
-    //        ;
-    //    }
+        if (!empty($criteria['location'])) {
+            $qb->andWhere('d.location = :location')
+               ->setParameter('location', $criteria['location']);
+        }
+
+        if (!empty($criteria['minSalary'])) {
+            $qb->andWhere('d.minSalary <= :minSalary')
+               ->setParameter('minSalary', $criteria['minSalary']);
+        }
+
+        if (!empty($criteria['experienceLevel'])) {
+            $qb->andWhere('d.experienceLevel = :experienceLevel')
+               ->setParameter('experienceLevel', $criteria['experienceLevel']);
+        }
+
+        return $qb->getQuery()->getResult();
+    }
 }

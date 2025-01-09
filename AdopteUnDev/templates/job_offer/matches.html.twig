@@ -1,0 +1,46 @@
+{# templates/job_offer/matches.html.twig #}
+
+<h1>Correspondances pour l'offre: {{ jobOffer.title }}</h1>
+
+{# Informations complètes sur l'offre d'emploi #}
+<p><strong>Lieu de l'offre :</strong> {{ jobOffer.location }}</p>
+<p><strong>Description :</strong> {{ jobOffer.description }}</p>
+<p><strong>Créée par :</strong> {{ jobOffer.user.email }}</p>
+<p><strong>Salaire minimum :</strong> {{ jobOffer.Salary }} €</p>
+<p><strong>Niveau d'expérience requis :</strong> {{ jobOffer.experienceRequired }}</p>
+<p><strong>Date de création :</strong> {{ jobOffer.createdAt|date('d/m/Y H:i') }}</p>
+
+<p><strong>Technologies recherchées :</strong> 
+    {# Affichage des technologies associées à l'offre #}
+    {{ jobOffer.technologies|map(tech => tech.name)|join(', ') }}
+</p>
+
+{# Si l'utilisateur connecté est l'auteur de l'offre, on ajoute des options de modification et suppression #}
+{% if app.user and app.user == jobOffer.user %}
+    <a href="{{ path('job_offer_edit', { id: jobOffer.id }) }}" class="btn btn-warning">Modifier l'offre</a>
+    <form method="post" action="{{ path('job_offer_delete', { id: jobOffer.id }) }}" style="display:inline;" onsubmit="return confirm('Voulez-vous vraiment supprimer cette offre ?');">
+        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ jobOffer.id) }}">
+        <button type="submit" class="btn btn-danger">Supprimer l'offre</button>
+    </form>
+{% endif %}
+
+{# Liste des correspondances des profils #}
+{% if matches is not empty %}
+    <h3>Profils correspondants :</h3>
+    <ul>
+        {% for match in matches %}
+        <li>
+            <strong>{{ match.developerProfile.firstName }} {{ match.developerProfile.lastName }}</strong><br>
+            Score: {{ match.score }}<br>
+            Location: {{ match.developerProfile.location }}<br>
+            Technologies: 
+            {# Affichage des technologies du profil #}
+            {{ match.developerProfile.technologies|map(tech => tech.name)|join(', ') }}<br>
+            Experience Level: {{ match.developerProfile.experienceLevel }}<br>
+            Salary: {{ match.developerProfile.minSalary }}<br>
+        </li>
+        {% endfor %}
+    </ul>
+{% else %}
+    <p>Aucune correspondance trouvée.</p>
+{% endif %}

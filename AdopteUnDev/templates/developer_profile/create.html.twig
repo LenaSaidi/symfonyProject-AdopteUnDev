@@ -1,12 +1,18 @@
+{# templates/developer_profile/create.html.twig #}
+
 {% extends 'base.html.twig' %}
-{{ form_start(form) }}
-    {{ form_row(form.firstName) }}
-    {{ form_row(form.lastName) }}
-    {{ form_row(form.location) }}
-    {{ form_row(form.experienceLevel) }}
-    {{ form_row(form.minSalary) }}
-    {{ form_row(form.bio) }}
-    {{ form_row(form.avatar) }}
-    {{ form_row(form.languages) }}
-    <button type="submit">Submit</button>
-{{ form_end(form) }}
+
+{% block body %}
+    <h1>Créer un Profil de Développeur</h1>
+
+    {{ form_start(form) }}
+        {{ form_row(form.firstName) }}
+        {{ form_row(form.lastName) }}
+        {{ form_row(form.location) }}
+        {{ form_row(form.experienceLevel) }}
+        {{ form_row(form.minSalary) }}
+        {# Affichage du champ Technologies #}
+        {{ form_row(form.technologies) }}
+        <button type="submit" class="btn btn-primary">Créer</button>
+    {{ form_end(form) }}
+{% endblock %}

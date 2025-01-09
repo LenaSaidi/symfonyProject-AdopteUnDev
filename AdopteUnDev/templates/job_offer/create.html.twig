@@ -1,0 +1,20 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Créer une Offre d'Emploi{% endblock %}
+
+{% block body %}
+<h1>Créer une Nouvelle Offre d'Emploi</h1>
+
+{{ form_start(form) }}
+    {{ form_row(form.title) }}
+    {{ form_row(form.location) }}
+    {{ form_row(form.description) }}
+    
+    {# Ajout du champ pour les technologies #}
+    {{ form_row(form.technologies) }}
+    
+    <button type="submit" class="btn btn-primary">Créer</button>
+{{ form_end(form) }}
+
+<a href="{{ path('job_offer_index') }}" class="btn btn-secondary">Retour à la liste</a>
+{% endblock %}

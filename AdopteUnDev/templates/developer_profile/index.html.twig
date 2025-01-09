@@ -1,0 +1,46 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Liste des Profils Développeurs{% endblock %}
+
+{% block body %}
+    <h1>Liste des Profils Développeurs</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Nom</th>
+                <th>Lieu</th>
+                <th>Expérience</th>
+                <th>Technologies</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for developerProfile in developerProfiles %}
+                <tr>
+                    <td>{{ developerProfile.firstName }} {{ developerProfile.lastName }}</td>
+                    <td>{{ developerProfile.location }}</td>
+                    <td>{{ developerProfile.experienceLevel }}</td>
+                    <td>
+                        {% if developerProfile.technologies|length > 0 %}
+                            <ul>
+                                {% for technology in developerProfile.technologies %}
+                                    <li>{{ technology.name }}</li>
+                                {% endfor %}
+                            </ul>
+                        {% else %}
+                            Aucune technologie
+                        {% endif %}
+                    </td>
+                    <td>
+                        <a href="{{ path('developer_profile_show', { id: developerProfile.id }) }}" class="btn btn-primary">Voir</a>
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="5">Aucun profil trouvé.</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

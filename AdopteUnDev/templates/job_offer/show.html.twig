@@ -1,0 +1,35 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Détails de l'Offre d'Emploi{% endblock %}
+
+{% block body %}
+<h1>{{ jobOffer.title }}</h1>
+
+<p><strong>Lieu :</strong> {{ jobOffer.location }}</p>
+<p><strong>Description :</strong> {{ jobOffer.description }}</p>
+<p><strong>Créé par :</strong> {{ jobOffer.user.email }}</p>
+<p><strong>Date de création :</strong> {{ jobOffer.createdAt|date('d/m/Y H:i') }}</p>
+
+<p><strong>Technologies :</strong></p>
+<ul>
+    {% for technology in jobOffer.technologies %}
+        <li>{{ technology.name }}</li>
+    {% else %}
+        <li>Aucune technologie associée.</li>
+    {% endfor %}
+</ul>
+
+<a href="{{ path('job_offer_index') }}" class="btn btn-secondary">Retour à la liste</a>
+
+{% if app.user and app.user == jobOffer.user %}
+    <a href="{{ path('job_offer_edit', { id: jobOffer.id }) }}" class="btn btn-warning">Modifier</a>
+    <form method="post" action="{{ path('job_offer_delete', { id: jobOffer.id }) }}" style="display:inline;" onsubmit="return confirm('Voulez-vous vraiment supprimer cette offre ?');">
+        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ jobOffer.id) }}">
+        <button type="submit" class="btn btn-danger">Supprimer</button>
+    </form>
+{% endif %}
+
+<!-- Ajout du bouton pour voir les correspondances -->
+<a href="{{ path('job_offer_matches', { id: jobOffer.id }) }}" class="btn btn-primary">Voir les correspondances</a>
+
+{% endblock %}

@@ -1,0 +1,34 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Mon Profil{% endblock %}
+
+{% block body %}
+    <h1>Mon Profil</h1>
+
+    <p><strong>Nom :</strong> {{ developerProfile.firstName }} {{ developerProfile.lastName }}</p>
+    <p><strong>Location :</strong> {{ developerProfile.location }}</p>
+    <p><strong>Technologies :</strong> {{ developerProfile.technologies|map(tech => tech.name)|join(', ') }}</p>
+    <p><strong>Niveau d'expérience :</strong> {{ developerProfile.experienceLevel }}</p>
+    <p><strong>Salaire souhaité :</strong> {{ developerProfile.minSalary }} €</p>
+
+    <h2>Offres d'Emploi Correspondantes</h2>
+    {% if matchingJobOffers is not empty %}
+        <ul>
+            {% for match in matchingJobOffers %}
+                <li>
+                    <strong>{{ match.jobOffer.title }}</strong><br>
+                    Location: {{ match.jobOffer.location }}<br>
+                    Technologies: {{ match.jobOffer.technologies|map(tech => tech.name)|join(', ') }}<br>
+                    Salaire minimum: {{ match.jobOffer.Salary }} €<br>
+                    Niveau d'expérience requis: {{ match.jobOffer.ExperienceRequired }}<br>
+                    Score: {{ match.score }}
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>Aucune offre d'emploi correspondante.</p>
+    {% endif %}
+
+    {# Bouton pour éditer le profil #}
+    <a href="{{ path('developer_profile_edit') }}" class="btn btn-primary">Modifier mon profil</a>
+{% endblock %}

@@ -1,0 +1,18 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Suggestions de Profils{% endblock %}
+
+{% block body %}
+    <h1>Suggestions de Profils</h1>
+
+    <ul>
+        {% for profile in profiles %}
+            <li>
+                {{ profile.firstName }} {{ profile.lastName }} - {{ profile.location }}
+                <a href="{{ path('developer_profile_show', { id: profile.id }) }}">Voir le profil</a>
+            </li>
+        {% else %}
+            <li>Aucun profil correspondant trouvé.</li>
+        {% endfor %}
+    </ul>
+{% endblock %}
