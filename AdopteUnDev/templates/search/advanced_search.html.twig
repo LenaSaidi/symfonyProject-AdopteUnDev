@@ -1,0 +1,30 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Advanced Search{% endblock %}
+
+{% block body %}
+    <h1>Advanced Search</h1>
+
+    <form method="get" action="{{ path('search_results') }}">
+        <label for="type">Type:</label>
+        <select name="type" id="type">
+            <option value="all">All</option>
+            <option value="developer">Developers</option>
+            <option value="job">Jobs</option>
+        </select>
+
+        <label for="technologies">Technologies:</label>
+        <input type="text" name="technologies[]" id="technologies" placeholder="e.g., PHP, JavaScript">
+
+        <label for="location">Location:</label>
+        <input type="text" name="location" id="location" placeholder="Location">
+
+        <label for="minSalary">Minimum Salary:</label>
+        <input type="number" name="minSalary" id="minSalary">
+
+        <label for="experienceLevel">Experience Level:</label>
+        <input type="number" name="experienceLevel" id="experienceLevel">
+
+        <button type="submit">Search</button>
+    </form>
+{% endblock %}

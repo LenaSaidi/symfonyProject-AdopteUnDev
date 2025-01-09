@@ -31,6 +31,16 @@ class JobOfferController extends AbstractController
         ]);
     }
 
+    // public function index(JobOfferRepository $jobOfferRepository): Response
+    // {
+    //     // Récupérer les offres d'emploi avec leurs technologies
+    //     $jobOffers = $jobOfferRepository->findJobOffersWithTechnologies();
+
+    //     return $this->render('job_offer/index.html.twig', [
+    //         'jobOffers' => $jobOffers,
+    //     ]);
+    // }
+
     #[Route('/company/job-offer', name: 'company_job_offer_index')]
     public function companyJobOffers(EntityManagerInterface $em): Response
     {
