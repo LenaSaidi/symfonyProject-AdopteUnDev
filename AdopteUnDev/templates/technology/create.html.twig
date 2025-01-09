@@ -1,0 +1,14 @@
+{# templates/technology/create.html.twig #}
+
+{% extends 'base.html.twig' %}
+
+{% block title %}Create Technology{% endblock %}
+
+{% block body %}
+    <h1>Create a new Technology</h1>
+
+    {{ form_start(form) }}
+        {{ form_row(form.name) }}
+        <button class="btn btn-primary">Submit</button>
+    {{ form_end(form) }}
+{% endblock %}

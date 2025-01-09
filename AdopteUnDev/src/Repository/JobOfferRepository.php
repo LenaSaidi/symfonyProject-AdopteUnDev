@@ -6,9 +6,6 @@ use App\Entity\JobOffer;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
-/**
- * @extends ServiceEntityRepository<JobOffer>
- */
 class JobOfferRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
@@ -16,28 +13,37 @@ class JobOfferRepository extends ServiceEntityRepository
         parent::__construct($registry, JobOffer::class);
     }
 
-    //    /**
-    //     * @return JobOffer[] Returns an array of JobOffer objects
-    //     */
-    //    public function findByExampleField($value): array
-    //    {
-    //        return $this->createQueryBuilder('j')
-    //            ->andWhere('j.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->orderBy('j.id', 'ASC')
-    //            ->setMaxResults(10)
-    //            ->getQuery()
-    //            ->getResult()
-    //        ;
-    //    }
+    /**
+     * Rechercher des offres d'emploi correspondant aux critères.
+     *
+     * @param array $criteria Les critères de recherche.
+     * @return array Les offres d'emploi correspondantes.
+     */
+    public function findMatchingJobs(array $criteria): array
+    {
+        $qb = $this->createQueryBuilder('j');
 
-    //    public function findOneBySomeField($value): ?JobOffer
-    //    {
-    //        return $this->createQueryBuilder('j')
-    //            ->andWhere('j.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->getQuery()
-    //            ->getOneOrNullResult()
-    //        ;
-    //    }
+        if (!empty($criteria['technologies'])) {
+            $qb->join('j.technologies', 't')
+               ->andWhere('t.name IN (:technologies)')
+               ->setParameter('technologies', $criteria['technologies']);
+        }
+
+        if (!empty($criteria['location'])) {
+            $qb->andWhere('j.location = :location')
+               ->setParameter('location', $criteria['location']);
+        }
+
+        if (!empty($criteria['minSalary'])) {
+            $qb->andWhere('j.minSalary >= :minSalary')
+               ->setParameter('minSalary', $criteria['minSalary']);
+        }
+
+        if (!empty($criteria['experienceLevel'])) {
+            $qb->andWhere('j.experienceLevel = :experienceLevel')
+               ->setParameter('experienceLevel', $criteria['experienceLevel']);
+        }
+
+        return $qb->getQuery()->getResult();
+    }
 }

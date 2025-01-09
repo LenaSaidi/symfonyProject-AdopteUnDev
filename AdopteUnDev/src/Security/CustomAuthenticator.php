@@ -2,6 +2,7 @@
 
 namespace App\Security;
 
+use Symfony\Component\Security\Core\Security;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -22,8 +23,15 @@ class CustomAuthenticator extends AbstractLoginFormAuthenticator
 
     public const LOGIN_ROUTE = 'app_login';
 
+    private ?Security $security = null;
+
     public function __construct(private UrlGeneratorInterface $urlGenerator)
     {
+    }
+
+    public function setSecurity(Security $security): void
+    {
+        $this->security = $security;
     }
 
     public function authenticate(Request $request): Passport
@@ -52,10 +60,7 @@ class CustomAuthenticator extends AbstractLoginFormAuthenticator
         }
 
         // For example:
-        return new RedirectResponse($this->urlGenerator->generate('developer_create'));
-
-
-
+        return new RedirectResponse($this->urlGenerator->generate('developer_profile_create'));
     }
 
     protected function getLoginUrl(Request $request): string

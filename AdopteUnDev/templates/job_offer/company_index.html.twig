@@ -1,0 +1,20 @@
+{# templates/job_offer/company_index.html.twig #}
+
+{% extends 'base.html.twig' %}
+
+{% block title %}Company Job Offers{% endblock %}
+
+{% block body %}
+    <h1>Company Job Offers</h1>
+    <ul>
+        {% for jobOffer in jobOffers %}
+            <li>
+                <a href="{{ path('job_offer_show', { id: jobOffer.id }) }}">
+                    {{ jobOffer.title }} - {{ jobOffer.location }}
+                </a>
+            </li>
+        {% else %}
+            <p>No job offers found for your company.</p>
+        {% endfor %}
+    </ul>
+{% endblock %}

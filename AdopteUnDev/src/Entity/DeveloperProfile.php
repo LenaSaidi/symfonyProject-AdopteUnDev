@@ -3,8 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\DeveloperProfileRepository;
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -15,7 +15,6 @@ class DeveloperProfile
     #[ORM\GeneratedValue]
     #[ORM\Column]
     private ?int $id = null;
-
 
     #[ORM\OneToOne(cascade: ['persist', 'remove'])]
     #[ORM\JoinColumn(nullable: false)]
@@ -30,11 +29,9 @@ class DeveloperProfile
     #[ORM\Column(length: 255)]
     private ?string $location = null;
 
-    /**
-     * @var Collection<int, Language>
-     */
-    #[ORM\ManyToMany(targetEntity: Language::class)]
-    private Collection $languages;
+    #[ORM\ManyToMany(targetEntity: Technology::class)]
+    #[ORM\JoinTable(name: 'developerProfile_technologies')]
+    private Collection $technologies;
 
     #[ORM\Column]
     private ?int $experienceLevel = null;
@@ -48,9 +45,21 @@ class DeveloperProfile
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $avatar = null;
 
+    #[ORM\Column(type: "datetime")]
+    private ?\DateTimeInterface $createdAt = null;
+
     public function __construct()
     {
-        $this->languages = new ArrayCollection();
+        $this->technologies = new ArrayCollection();
+        $this->createdAt = new \DateTime();
+    }
+
+    #[ORM\PrePersist] // Ajoutez cette méthode pour définir la date de création juste avant l'enregistrement
+    public function setCreatedAtValue(): void
+    {
+        if ($this->createdAt === null) {
+            $this->createdAt = new \DateTime(); 
+        }
     }
 
     public function getId(): ?int
@@ -106,30 +115,6 @@ class DeveloperProfile
         return $this;
     }
 
-    /**
-     * @return Collection<int, Language>
-     */
-    public function getLanguages(): Collection
-    {
-        return $this->languages;
-    }
-
-    public function addLanguage(Language $language): static
-    {
-        if (!$this->languages->contains($language)) {
-            $this->languages->add($language);
-        }
-
-        return $this;
-    }
-
-    public function removeLanguage(Language $language): static
-    {
-        $this->languages->removeElement($language);
-
-        return $this;
-    }
-
     public function getExperienceLevel(): ?int
     {
         return $this->experienceLevel;
@@ -175,6 +160,38 @@ class DeveloperProfile
     {
         $this->avatar = $avatar;
 
+        return $this;
+    }
+
+    public function getTechnologies(): Collection
+    {
+        return $this->technologies;
+    }
+
+    public function addTechnology(Technology $technology): static
+    {
+        if (!$this->technologies->contains($technology)) {
+            $this->technologies->add($technology);
+        }
+
+        return $this;
+    }
+
+    public function removeTechnology(Technology $technology): static
+    {
+        $this->technologies->removeElement($technology);
+
+        return $this;
+    }
+
+    public function getCreatedAt(): ?\DateTimeInterface
+    {
+        return $this->createdAt;
+    }
+
+    public function setCreatedAt(\DateTimeInterface $createdAt): static
+    {
+        $this->createdAt = $createdAt;
         return $this;
     }
 }

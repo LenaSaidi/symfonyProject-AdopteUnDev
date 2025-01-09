@@ -43,6 +43,9 @@ security:
         # - { path: ^/profile, roles: ROLE_USER }
         # - { path: ^/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
 
+        # - { path: ^/developer, roles: ROLE_DEVELOPER }
+        # - { path: ^/company, roles: ROLE_COMPANY }
+
 when@test:
     security:
         password_hashers:

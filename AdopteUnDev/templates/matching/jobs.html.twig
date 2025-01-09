@@ -1,0 +1,18 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Suggestions de Postes{% endblock %}
+
+{% block body %}
+    <h1>Suggestions de Postes</h1>
+
+    <ul>
+        {% for job in jobs %}
+            <li>
+                {{ job.title }} - {{ job.location }} - {{ job.salary }} €
+                <a href="{{ path('job_show', { id: job.id }) }}">Voir l'offre</a>
+            </li>
+        {% else %}
+            <li>Aucun poste correspondant trouvé.</li>
+        {% endfor %}
+    </ul>
+{% endblock %}

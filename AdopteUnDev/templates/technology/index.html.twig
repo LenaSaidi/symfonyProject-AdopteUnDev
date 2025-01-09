@@ -1,0 +1,36 @@
+{# templates/technology/index.html.twig #}
+
+{% extends 'base.html.twig' %}
+
+{% block title %}Technologies{% endblock %}
+
+{% block body %}
+    <h1>Technologies</h1>
+
+    <h2>Add New Technology</h2>
+    <a href="{{ path('technology_create') }}" class="btn btn-success">Add Technology</a>
+
+    <h2>All Technologies</h2>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for technology in technologies %}
+                <tr>
+                    <td>{{ technology.name }}</td>
+                    <td>
+                        <a href="{{ path('technology_delete', { id: technology.id }) }}" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this technology?')">Delete</a>
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="3">No technologies found</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}
