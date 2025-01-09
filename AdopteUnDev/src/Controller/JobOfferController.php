@@ -22,24 +22,24 @@ class JobOfferController extends AbstractController
     }
 
     #[Route('/job-offers', name: 'job_offer_index')]
-    // public function index(EntityManagerInterface $em): Response
-    // {
-    //     $jobOffers = $em->getRepository(JobOffer::class)->findAll();
-
-    //     return $this->render('job_offer/index.html.twig', [
-    //         'jobOffers' => $jobOffers,
-    //     ]);
-    // }
-
-    public function index(JobOfferRepository $jobOfferRepository): Response
+    public function index(EntityManagerInterface $em): Response
     {
-        // Récupérer les offres d'emploi avec leurs technologies
-        $jobOffers = $jobOfferRepository->findJobOffersWithTechnologies();
+        $jobOffers = $em->getRepository(JobOffer::class)->findAll();
 
         return $this->render('job_offer/index.html.twig', [
             'jobOffers' => $jobOffers,
         ]);
     }
+
+    // public function index(JobOfferRepository $jobOfferRepository): Response
+    // {
+    //     // Récupérer les offres d'emploi avec leurs technologies
+    //     $jobOffers = $jobOfferRepository->findJobOffersWithTechnologies();
+
+    //     return $this->render('job_offer/index.html.twig', [
+    //         'jobOffers' => $jobOffers,
+    //     ]);
+    // }
 
     #[Route('/company/job-offer', name: 'company_job_offer_index')]
     public function companyJobOffers(EntityManagerInterface $em): Response
