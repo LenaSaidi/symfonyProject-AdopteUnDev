@@ -12,7 +12,15 @@ class JobOfferRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, JobOffer::class);
     }
+    
+    public function findJobOffersWithTechnologies()
+    {
+        $qb = $this->createQueryBuilder('j')
+            ->leftJoin('j.technologies', 't') // Jointure avec la table technologies
+            ->addSelect('t'); // Ajouter les technologies aux résultats
 
+        return $qb->getQuery()->getResult();
+    }
     /**
      * Rechercher des offres d'emploi correspondant aux critères.
      *
@@ -46,4 +54,40 @@ class JobOfferRepository extends ServiceEntityRepository
 
         return $qb->getQuery()->getResult();
     }
+
+
+    public function findByAdvancedCriteria(array $criteria): array
+    {
+        $qb = $this->createQueryBuilder('j')
+            ->leftJoin('j.technologies', 't')
+            ->addSelect('t');
+
+        if (!empty($criteria['technologies'])) {
+            $qb->andWhere('t.name IN (:technologies)')
+               ->setParameter('technologies', $criteria['technologies']);
+        }
+
+        if (!empty($criteria['location'])) {
+            $qb->andWhere('j.location = :location')
+               ->setParameter('location', $criteria['location']);
+        }
+
+        if (!empty($criteria['minSalary'])) {
+            $qb->andWhere('j.salary >= :minSalary')
+               ->setParameter('minSalary', $criteria['minSalary']);
+        }
+
+        if (!empty($criteria['experienceLevel'])) {
+            $qb->andWhere('j.experienceRequired >= :experienceLevel')
+               ->setParameter('experienceLevel', $criteria['experienceLevel']);
+        }
+
+        dump($qb->getQuery()->getSQL());  // Affiche la requête SQL générée
+dump($qb->getParameters());       // Affiche les paramètres envoyés
+
+
+        return $qb->getQuery()->getResult();
+    }
+    
+    
 }

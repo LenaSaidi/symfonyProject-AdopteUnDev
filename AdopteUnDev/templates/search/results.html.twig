@@ -1,0 +1,56 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Search Results{% endblock %}
+
+{% block body %}
+    <h1>Search Results</h1>
+
+    <div class="search-results">
+        {% if results.developers is defined %}
+            <h2>Developer Profiles</h2>
+            {% if results.developers is empty %}
+                <p>No developers match your criteria.</p>
+            {% else %}
+                <ul>
+                    {% for developer in results.developers %}
+                        <li>
+                            <strong>Name:</strong> {{ developer.firstName }} {{ developer.lastName }}<br>
+                            <strong>Location:</strong> {{ developer.location }}<br>
+                            <p>Technologies : 
+                                {% for tech in developer.technologies %}
+                                    {{ tech.name }}{% if not loop.last %}, {% endif %}
+                                {% endfor %}
+                            </p>
+                            <strong>Experience Level:</strong> {{ developer.experienceLevel }}<br>
+                            <strong>Salary:</strong> {{ developer.minSalary }}<br>
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        {% endif %}
+
+        {% if results.jobs is defined %}
+            <h2>Job Offers</h2>
+            {% if results.jobs is empty %}
+                <p>No job offers match your criteria.</p>
+            {% else %}
+                <ul>
+                    {% for job in results.jobs %}
+                        <li>
+                            <strong>Title:</strong> {{ job.title }}<br>
+                            <strong>Location:</strong> {{ job.location }}<br>
+                            <strong>Salary:</strong> {{ job.salary }}<br>
+                            <strong>Experience Level:</strong> {{ job.experienceRequired }}<br>
+                            <p>Technologies : 
+                                {% for tech in job.technologies %}
+                                    {{ tech.name }}{% if not loop.last %}, {% endif %}
+                                {% endfor %}
+                            </p>
+                            <strong>Description:</strong> {{ job.description }}<br>
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        {% endif %}
+    </div>
+{% endblock %}

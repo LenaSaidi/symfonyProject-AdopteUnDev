@@ -1,0 +1,23 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Search Job Offers{% endblock %}
+
+{% block body %}
+    <h1>Search Results</h1>
+
+    {% if jobOffers is not empty %}
+        <ul>
+            {% for job in jobOffers %}
+                <li>
+                    <strong>{{ job.title }}</strong><br>
+                    Location: {{ job.location }}<br>
+                    Salary: {{ job.salary }} €<br>
+                    Technology: {{ job.technology }}<br>
+                    Experience Level: {{ job.experienceLevel }}
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>No job offers match your criteria.</p>
+    {% endif %}
+{% endblock %}
