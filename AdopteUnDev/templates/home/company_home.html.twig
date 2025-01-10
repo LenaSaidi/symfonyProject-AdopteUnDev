@@ -1,0 +1,21 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Accueil Entreprises{% endblock %}
+
+{% block body %}
+    <h1>Accueil Entreprises</h1>
+
+    <h2>Profils les plus consultés</h2>
+    <ul>
+        {% for profile in mostViewedProfiles %}
+            <li>{{ profile.firstName }} {{ profile.lastName }} - {{ profile.views }} vues</li>
+        {% endfor %}
+    </ul>
+
+    <h2>Derniers profils créés</h2>
+    <ul>
+        {% for profile in latestProfiles %}
+            <li>{{ profile.firstName }} {{ profile.lastName }} - Créé le {{ profile.createdAt|date('d/m/Y') }}</li>
+        {% endfor %}
+    </ul>
+{% endblock %}

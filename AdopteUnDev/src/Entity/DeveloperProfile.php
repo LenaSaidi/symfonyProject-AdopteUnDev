@@ -48,6 +48,10 @@ class DeveloperProfile
     #[ORM\Column(type: "datetime")]
     private ?\DateTimeInterface $createdAt = null;
 
+    #[ORM\Column(type: 'integer')]
+    private $views = 0;
+    
+
     public function __construct()
     {
         $this->technologies = new ArrayCollection();
@@ -192,6 +196,17 @@ class DeveloperProfile
     public function setCreatedAt(\DateTimeInterface $createdAt): static
     {
         $this->createdAt = $createdAt;
+        return $this;
+    }
+
+    public function getViews(): int
+    {
+        return $this->views;
+    }
+    
+    public function incrementViews(): self
+    {
+        $this->views++;
         return $this;
     }
 }

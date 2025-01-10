@@ -144,7 +144,7 @@ class DeveloperProfileController extends AbstractController
     }
 
     #[Route('/developer/profile/view/{id}', name: 'developer_profile_show')]
-    public function showById(int $id, EntityManagerInterface $em): Response
+    public function showById(int $id, EntityManagerInterface $em, ): Response
     {
         // Récupérer le profil du développeur par ID
         $developerProfile = $em->getRepository(DeveloperProfile::class)->find($id);
@@ -153,8 +153,14 @@ class DeveloperProfileController extends AbstractController
             throw $this->createNotFoundException('Profil non trouvé');
         }
 
+        // Incrémenter les vues
+        $developerProfile->incrementViews();
+        $em->flush();
+
         // Vous pouvez également récupérer les offres d'emploi correspondantes ici si nécessaire
         // $matchingJobOffers = $this->matchingService->getMatchingJobOffers($developerProfile);
+
+        
 
         return $this->render('developer_profile/show_by_id.html.twig', [
             'developerProfile' => $developerProfile,

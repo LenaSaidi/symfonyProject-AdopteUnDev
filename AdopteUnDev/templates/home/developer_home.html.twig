@@ -1,0 +1,21 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Accueil Développeurs{% endblock %}
+
+{% block body %}
+    <h1>Accueil Développeurs</h1>
+
+    <h2>Postes les plus populaires</h2>
+    <ul>
+        {% for offer in mostPopularOffers %}
+            <li>{{ offer.title }} - Popularité : {{ offer.popularity }}</li>
+        {% endfor %}
+    </ul>
+
+    <h2>Dernières offres publiées</h2>
+    <ul>
+        {% for offer in latestOffers %}
+            <li>{{ offer.title }} - Publiée le {{ offer.createdAt|date('d/m/Y') }}</li>
+        {% endfor %}
+    </ul>
+{% endblock %}

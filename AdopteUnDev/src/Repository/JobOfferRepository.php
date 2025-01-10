@@ -12,7 +12,7 @@ class JobOfferRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, JobOffer::class);
     }
-    
+
     public function findJobOffersWithTechnologies()
     {
         $qb = $this->createQueryBuilder('j')
@@ -83,10 +83,28 @@ class JobOfferRepository extends ServiceEntityRepository
         }
 
         dump($qb->getQuery()->getSQL());  // Affiche la requête SQL générée
-dump($qb->getParameters());       // Affiche les paramètres envoyés
+        dump($qb->getParameters());       // Affiche les paramètres envoyés
 
 
         return $qb->getQuery()->getResult();
+    }
+
+    public function findMostPopularOffers(int $limit = 5)
+    {
+        return $this->createQueryBuilder('jo')
+            ->orderBy('jo.popularity', 'DESC')
+            ->setMaxResults($limit)
+            ->getQuery()
+            ->getResult();
+    }
+
+    public function findLatestOffers(int $limit = 3)
+    {
+        return $this->createQueryBuilder('jo')
+            ->orderBy('jo.createdAt', 'DESC')
+            ->setMaxResults($limit)
+            ->getQuery()
+            ->getResult();
     }
     
     
