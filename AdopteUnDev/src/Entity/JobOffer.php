@@ -44,6 +44,9 @@ class JobOffer
 
     #[ORM\Column(type: 'integer')]
     private $popularity = 0;
+
+    #[ORM\Column(type: 'integer')]
+    private int $views = 0;
     
 
     public function __construct()
@@ -167,5 +170,14 @@ class JobOffer
         return $this;
     }
 
+    public function getViews(): int
+    {
+        return $this->views;
+    }
+
+    public function incrementViews(): void
+    {
+        $this->views++;
+    }
   
 }

@@ -1,0 +1,19 @@
+<h1>Statistiques</h1>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Poste</th>
+            <th>Vues</th>
+            <th>Popularité</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for jobOffer in jobOffers %}
+            <tr>
+                <td>{{ jobOffer.title }}</td>
+                <td>{{ jobOffer.views }}</td>
+                <td>{{ jobOffer.popularity }}</td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>

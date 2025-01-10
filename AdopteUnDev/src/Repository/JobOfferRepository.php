@@ -106,6 +106,16 @@ class JobOfferRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult();
     }
+
+    public function findMostViewed(int $limit = 5): array
+    {
+        return $this->createQueryBuilder('j')
+            ->orderBy('j.views', 'DESC')
+            ->setMaxResults($limit)
+            ->getQuery()
+            ->getResult();
+    }
+    
     
     
 }

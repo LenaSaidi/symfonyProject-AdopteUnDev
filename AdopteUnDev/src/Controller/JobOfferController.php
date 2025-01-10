@@ -116,8 +116,17 @@ class JobOfferController extends AbstractController
     }
 
     #[Route('/job-offer/{id}/show', name: 'job_offer_show')]
-    public function show(JobOffer $jobOffer): Response
+    public function show(JobOffer $jobOffer ,EntityManagerInterface $em): Response
     {
+
+        $user = $this->getUser();
+    
+        if ($user && $jobOffer->getUser() !== $user) {
+            $jobOffer->incrementViews();
+            $em->persist($jobOffer);
+            $em->flush();
+        }
+
         return $this->render('job_offer/show.html.twig', [
             'jobOffer' => $jobOffer,
         ]);
