@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\JobOffer;
 use App\Form\JobOfferType;
 use App\Service\MatchingService;
+use App\Repository\JobOfferRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -147,4 +148,27 @@ class JobOfferController extends AbstractController
             'matches' => $matches
         ]);
     }
+
+
+    #[Route('/job/{id}/apply', name: 'job_offer_apply')]
+    public function apply(
+        int $id,
+        JobOfferRepository $repository,
+        EntityManagerInterface $entityManager
+    ): Response {
+        $jobOffer = $repository->find($id);
+    
+        if (!$jobOffer) {
+            throw $this->createNotFoundException('Offre non trouvée.');
+        }
+    
+        // Incrémenter la popularité
+        $jobOffer->setPopularity($jobOffer->getPopularity() + 1);
+        $entityManager->flush();
+    
+        $this->addFlash('success', 'Votre candidature a été envoyée avec succès.');
+    
+        return $this->redirectToRoute('job_offer_show', ['id' => $id]);
+    }
+    
 }

@@ -70,6 +70,24 @@ class DeveloperProfileRepository extends ServiceEntityRepository
 
         return $qb->getQuery()->getResult();
     
-    
 }
+
+    public function findMostViewedProfiles(int $limit = 5)
+    {
+        return $this->createQueryBuilder('dp')
+            ->orderBy('dp.views', 'DESC')
+            ->setMaxResults($limit)
+            ->getQuery()
+            ->getResult();
+    }
+
+    public function findLatestProfiles(int $limit = 3)
+    {
+        return $this->createQueryBuilder('dp')
+            ->orderBy('dp.createdAt', 'DESC')
+            ->setMaxResults($limit)
+            ->getQuery()
+            ->getResult();
+    }
+    
 }

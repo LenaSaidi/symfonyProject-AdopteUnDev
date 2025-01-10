@@ -41,6 +41,9 @@ class JobOffer
 
     #[ORM\Column(type: "datetime")]
     private ?\DateTimeInterface $createdAt = null;
+
+    #[ORM\Column(type: 'integer')]
+    private $popularity = 0;
     
 
     public function __construct()
@@ -153,6 +156,16 @@ class JobOffer
         return $this;
     }
 
+    public function getPopularity(): int
+    {
+        return $this->popularity;
+    }
+    
+    public function setPopularity(int $popularity): self
+    {
+        $this->popularity = $popularity;
+        return $this;
+    }
 
   
 }
