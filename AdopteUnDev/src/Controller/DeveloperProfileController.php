@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\DeveloperProfile;
 use App\Form\DeveloperProfileType;
+use App\Form\EvaluationType;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Service\MatchingService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -12,6 +13,10 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\String\Slugger\SluggerInterface;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
+use App\Repository\DeveloperProfileRepository;
+use App\Repository\EvaluationRepository;
+use App\Entity\Evaluation;
+
 
 class DeveloperProfileController extends AbstractController
 {
@@ -138,7 +143,7 @@ class DeveloperProfileController extends AbstractController
         }
     }
 
-    #[Route('/developer/profile/view/{id}', name: 'developer_profile_show_by_id')]
+    #[Route('/developer/profile/view/{id}', name: 'developer_profile_show')]
     public function showById(int $id, EntityManagerInterface $em): Response
     {
         // Récupérer le profil du développeur par ID
@@ -154,6 +159,84 @@ class DeveloperProfileController extends AbstractController
         return $this->render('developer_profile/show_by_id.html.twig', [
             'developerProfile' => $developerProfile,
             // 'matchingJobOffers' => $matchingJobOffers
+        ]);
+    }
+
+
+    #[Route('/developer/{id}/evaluate', name: 'developer_evaluate')]
+    public function evaluate($id,EntityManagerInterface $em, Request $request, DeveloperProfileRepository $developerProfileRepository, EvaluationRepository $evaluationRepository): Response
+    {
+        $user = $this->getUser();
+
+        if (!$user) {
+            return $this->redirectToRoute('app_login');
+        }
+        $evaluator = $em->getRepository(DeveloperProfile::class)->findOneBy(['user' => $user]);
+
+        if (!$evaluator) {
+            return $this->redirectToRoute('login');
+        }
+        // Récupérer le développeur à évaluer
+        $developer = $developerProfileRepository->find($id);
+
+        if (!$developer) {
+            throw $this->createNotFoundException('Développeur non trouvé');
+        }
+
+        $evaluation = $evaluationRepository->findOneBy([
+            'evaluator' => $evaluator,
+            'evaluatedDeveloper' => $developer,
+        ]);
+
+        if (!$evaluation) {
+            // Créer un objet Evaluation
+            $evaluation = new Evaluation();
+            $evaluation->setEvaluator($evaluator); // Utilisateur connecté
+            $evaluation->setEvaluatedDeveloper($developer);
+
+        }
+
+        // Créer et traiter le formulaire
+        $form = $this->createForm(EvaluationType::class, $evaluation);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            // Enregistrer l'évaluation dans la base de données
+            $em->persist($evaluation);
+            $em->flush();
+
+            // Rediriger ou afficher un message de succès
+            return $this->redirectToRoute('developer_profile', ['id' => $id]);
+        }
+
+        return $this->render('developer_profile/evaluate.html.twig', [
+            'form' => $form->createView(),
+            'developer' => $developer,
+        ]);
+    }
+
+    #[Route('/developer/{id}/profile', name: 'developer_profile')]
+    public function profile($id, DeveloperProfileRepository $developerProfileRepository, EvaluationRepository $evaluationRepository): Response
+    {
+        $developer = $developerProfileRepository->find($id);
+
+        // Récupérer toutes les évaluations pour ce développeur
+        $evaluations = $evaluationRepository->findBy(['evaluatedDeveloper' => $developer]);
+
+        // Calculer la moyenne des évaluations
+        $averageRating = 0;
+        if (count($evaluations) > 0) {
+            $sum = 0;
+            foreach ($evaluations as $evaluation) {
+                $sum += $evaluation->getRating();
+            }
+            $averageRating = $sum / count($evaluations);
+        }
+
+        return $this->render('developer_profile/profile2.html.twig', [
+            'developer' => $developer,
+            'averageRating' => $averageRating,
+            'evaluations' => $evaluations,
         ]);
     }
 

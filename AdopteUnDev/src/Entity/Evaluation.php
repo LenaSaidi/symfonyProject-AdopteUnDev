@@ -1,44 +1,47 @@
 <?php
 
+// src/Entity/Evaluation.php
+
 namespace App\Entity;
 
-use App\Repository\EvaluationRepository;
-use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: EvaluationRepository::class)]
 class Evaluation
 {
+    // L'ID de l'évaluation
     #[ORM\Id]
     #[ORM\GeneratedValue]
-    #[ORM\Column]
+    #[ORM\Column(type: "integer")]
     private ?int $id = null;
 
-    #[ORM\ManyToOne]
-    #[ORM\JoinColumn(nullable: false)]
-    private ?DeveloperProfile $developerProfile = null;
-
-    #[ORM\Column]
+    // La note attribuée
+    #[ORM\Column(type: "integer")]
     private ?int $rating = null;
 
-    #[ORM\Column(type: Types::TEXT, nullable: true)]
-    private ?string $comment = null;
+    // Le développeur qui a laissé l'évaluation
+    #[ORM\ManyToOne(targetEntity: "App\Entity\DeveloperProfile")]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?DeveloperProfile $evaluator = null;
 
+    // Le développeur qui reçoit l'évaluation
+    #[ORM\ManyToOne(targetEntity: "App\Entity\DeveloperProfile")]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?DeveloperProfile $evaluatedDeveloper = null;
+
+    // La date de l'évaluation
+    #[ORM\Column(type: "datetime")]
+    private ?\DateTimeInterface $createdAt = null;
+
+    public function __construct()
+    {
+        $this->createdAt = new \DateTime();
+    }
+
+    // Getters et setters
     public function getId(): ?int
     {
         return $this->id;
-    }
-
-    public function getDeveloperProfile(): ?DeveloperProfile
-    {
-        return $this->developerProfile;
-    }
-
-    public function setDeveloperProfile(?DeveloperProfile $developerProfile): static
-    {
-        $this->developerProfile = $developerProfile;
-
-        return $this;
     }
 
     public function getRating(): ?int
@@ -46,21 +49,45 @@ class Evaluation
         return $this->rating;
     }
 
-    public function setRating(int $rating): static
+    public function setRating(int $rating): self
     {
         $this->rating = $rating;
 
         return $this;
     }
 
-    public function getComment(): ?string
+    public function getEvaluator(): ?DeveloperProfile
     {
-        return $this->comment;
+        return $this->evaluator;
     }
 
-    public function setComment(?string $comment): static
+    public function setEvaluator(?DeveloperProfile $evaluator): self
     {
-        $this->comment = $comment;
+        $this->evaluator = $evaluator;
+
+        return $this;
+    }
+
+    public function getEvaluatedDeveloper(): ?DeveloperProfile
+    {
+        return $this->evaluatedDeveloper;
+    }
+
+    public function setEvaluatedDeveloper(?DeveloperProfile $evaluatedDeveloper): self
+    {
+        $this->evaluatedDeveloper = $evaluatedDeveloper;
+
+        return $this;
+    }
+
+    public function getCreatedAt(): ?\DateTimeInterface
+    {
+        return $this->createdAt;
+    }
+
+    public function setCreatedAt(\DateTimeInterface $createdAt): self
+    {
+        $this->createdAt = $createdAt;
 
         return $this;
     }
