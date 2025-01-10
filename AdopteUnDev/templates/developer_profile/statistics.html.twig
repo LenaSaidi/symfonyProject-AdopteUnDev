@@ -1,0 +1,16 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Statistiques de votre Profil Développeur{% endblock %}
+
+{% block body %}
+    <h1>Statistiques de votre Profil Développeur</h1>
+
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title">Vues de votre Profil</h5>
+            <p class="card-text">Votre profil a été consulté {{ profileViews }} fois.</p>
+        </div>
+    </div>
+
+    <a href="{{ path('my_profile_show') }}" class="btn btn-primary mt-3">Voir votre Profil</a>
+{% endblock %}

@@ -16,6 +16,7 @@ use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use App\Repository\DeveloperProfileRepository;
 use App\Repository\EvaluationRepository;
 use App\Entity\Evaluation;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 
 class DeveloperProfileController extends AbstractController
@@ -153,9 +154,13 @@ class DeveloperProfileController extends AbstractController
             throw $this->createNotFoundException('Profil non trouvé');
         }
 
-        // Incrémenter les vues
-        $developerProfile->incrementViews();
-        $em->flush();
+        $user = $this->getUser();
+
+        if ($user && $developerProfile->getUser() !== $user) {
+            // Incrémenter les vues
+            $developerProfile->incrementViews();
+            $em->flush();
+        }
 
         // Vous pouvez également récupérer les offres d'emploi correspondantes ici si nécessaire
         // $matchingJobOffers = $this->matchingService->getMatchingJobOffers($developerProfile);
@@ -243,6 +248,27 @@ class DeveloperProfileController extends AbstractController
             'developer' => $developer,
             'averageRating' => $averageRating,
             'evaluations' => $evaluations,
+        ]);
+    }
+
+    #[Route('/developer/statistics', name: 'developer_statistics')]
+    #[IsGranted('ROLE_DEVELOPER')]
+    public function statistics(EntityManagerInterface $em): Response
+    {
+        $user = $this->getUser();
+
+        if (!$user) {
+            return $this->redirectToRoute('app_login');
+        }
+        $developerProfile = $em->getRepository(DeveloperProfile::class)->findOneBy(['user' => $user]);
+
+    
+        if (!$developerProfile) {
+            throw $this->createNotFoundException('Profil développeur introuvable.');
+        }
+    
+        return $this->render('developer_profile/statistics.html.twig', [
+            'profileViews' => $developerProfile->getViews(),
         ]);
     }
 

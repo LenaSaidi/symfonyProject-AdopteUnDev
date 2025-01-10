@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\CompanyProfile;
+use App\Entity\JobOffer; 
 use App\Form\CompanyProfileType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -102,6 +103,18 @@ class CompanyProfileController extends AbstractController
         return $this->render('company_profile/edit.html.twig', [
             'form' => $form->createView(),
             'companyProfile' => $companyProfile,
+        ]);
+    }
+
+    #[Route('/company/statistics', name: 'company_statistics')]
+    #[IsGranted('ROLE_COMPANY')]
+    public function statistics(EntityManagerInterface $em): Response
+    {
+        $user = $this->getUser();
+        $jobOffers = $em->getRepository(JobOffer::class)->findBy(['user' => $user]);
+    
+        return $this->render('company_profile/statistics.html.twig', [
+            'jobOffers' => $jobOffers,
         ]);
     }
     
