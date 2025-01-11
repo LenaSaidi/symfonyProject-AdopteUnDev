@@ -3,33 +3,69 @@
 {% block title %}Détails de l'Offre d'Emploi{% endblock %}
 
 {% block body %}
-<h1>{{ jobOffer.title }}</h1>
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <h1 class="display-4 text-center mb-4">{{ jobOffer.title }}</h1>
 
-<p><strong>Lieu :</strong> {{ jobOffer.location }}</p>
-<p><strong>Description :</strong> {{ jobOffer.description }}</p>
-<p><strong>Créé par :</strong> {{ jobOffer.user.email }}</p>
-<p><strong>Date de création :</strong> {{ jobOffer.createdAt|date('d/m/Y H:i') }}</p>
+            <!-- Informations sur l'offre -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5>Informations de l'Offre</h5>
+                </div>
+                <div class="card-body">
+                    <p><strong>Lieu :</strong> <span class="text-muted">{{ jobOffer.location }}</span></p>
+                    <p><strong>Description :</strong> <span class="text-muted">{{ jobOffer.description }}</span></p>
+                    <p><strong>Créé par :</strong> <span class="text-muted">{{ jobOffer.user.email }}</span></p>
+                    <p><strong>Date de création :</strong> <span class="text-muted">{{ jobOffer.createdAt|date('d/m/Y H:i') }}</span></p>
+                </div>
+            </div>
 
-<p><strong>Technologies :</strong></p>
-<ul>
-    {% for technology in jobOffer.technologies %}
-        <li>{{ technology.name }}</li>
-    {% else %}
-        <li>Aucune technologie associée.</li>
-    {% endfor %}
-</ul>
+            <!-- Liste des technologies -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5>Technologies requises</h5>
+                </div>
+                <div class="card-body">
+                    <ul>
+                        {% for technology in jobOffer.technologies %}
+                            <li>{{ technology.name }}</li>
+                        {% else %}
+                            <li>Aucune technologie associée.</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
 
-<a href="{{ path('job_offer_index') }}" class="btn btn-secondary">Retour à la liste</a>
+            <!-- Boutons actions -->
+            <div class="d-flex justify-content-between mt-4">
+                <a href="{{ path('job_offer_index') }}" class="btn btn-secondary">Retour à la liste</a>
 
-{% if app.user and app.user == jobOffer.user %}
-    <a href="{{ path('job_offer_edit', { id: jobOffer.id }) }}" class="btn btn-warning">Modifier</a>
-    <form method="post" action="{{ path('job_offer_delete', { id: jobOffer.id }) }}" style="display:inline;" onsubmit="return confirm('Voulez-vous vraiment supprimer cette offre ?');">
-        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ jobOffer.id) }}">
-        <button type="submit" class="btn btn-danger">Supprimer</button>
-    </form>
-{% endif %}
+                {% if app.user and app.user == jobOffer.user %}
+                    <!-- Si l'utilisateur est celui qui a créé l'offre, afficher les boutons Modifier, Supprimer, et Voir les correspondances -->
+                    <div>
+                        <a href="{{ path('job_offer_edit', { id: jobOffer.id }) }}" class="btn btn-warning">Modifier</a>
+                        <form method="post" action="{{ path('job_offer_delete', { id: jobOffer.id }) }}" style="display:inline;" onsubmit="return confirm('Voulez-vous vraiment supprimer cette offre ?');">
+                            <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ jobOffer.id) }}">
+                            <button type="submit" class="btn btn-danger">Supprimer</button>
+                        </form>
+                        <a href="{{ path('job_offer_matches', { id: jobOffer.id }) }}" class="btn btn-info">Voir les correspondances</a>
+                    </div>
+                {% endif %}
 
-<!-- Ajout du bouton pour voir les correspondances -->
-<a href="{{ path('job_offer_matches', { id: jobOffer.id }) }}" class="btn btn-primary">Voir les correspondances</a>
+                <a href="{{ path('company_profile_show', { id: jobOffer.user.id }) }}" class="btn btn-primary">Voir le profil de l'entreprise</a>
 
+                {% if app.user %}
+                    <!-- Si l'utilisateur est connecté, afficher les boutons Ajouter ou Retirer des favoris -->
+                    {% if isFavorite %}
+                        <a href="{{ path('remove_favorite_job_offer', {id: jobOffer.id}) }}" class="btn btn-danger">Retirer des favoris</a>
+                    {% else %}
+                        <a href="{{ path('add_favorite_job_offer', {id: jobOffer.id}) }}" class="btn btn-success">Ajouter aux favoris</a>
+                    {% endif %}
+                {% endif %}
+            
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}

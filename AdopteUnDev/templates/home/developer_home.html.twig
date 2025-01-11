@@ -3,19 +3,49 @@
 {% block title %}Accueil Développeurs{% endblock %}
 
 {% block body %}
-    <h1>Accueil Développeurs</h1>
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <h1 class="display-4 mb-4 text-center">Bienvenue sur l'Accueil Développeurs</h1>
 
-    <h2>Postes les plus populaires</h2>
-    <ul>
-        {% for offer in mostPopularOffers %}
-            <li>{{ offer.title }} - Popularité : {{ offer.popularity }}</li>
-        {% endfor %}
-    </ul>
+            <div class="row mb-4">
+                <div class="col-12">
+                    <h2>Postes les plus populaires</h2>
+                </div>
+                {% for offer in mostPopularOffers %}
+                    <div class="col-md-6 col-lg-4 mb-4">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title">{{ offer.title }}</h5>
+                                <p class="card-text">Popularité : {{ offer.popularity }}</p>
+                                <a href="{{ path('job_offer_show', {id: offer.id}) }}" class="btn btn-primary">Voir l'offre</a>
+                            </div>
+                        </div>
+                    </div>
+                {% else %}
+                    <p>Aucune offre populaire disponible pour le moment.</p>
+                {% endfor %}
+            </div>
 
-    <h2>Dernières offres publiées</h2>
-    <ul>
-        {% for offer in latestOffers %}
-            <li>{{ offer.title }} - Publiée le {{ offer.createdAt|date('d/m/Y') }}</li>
-        {% endfor %}
-    </ul>
+            <div class="row mb-4">
+                <div class="col-12">
+                    <h2>Dernières offres publiées</h2>
+                </div>
+                {% for offer in latestOffers %}
+                    <div class="col-md-6 col-lg-4 mb-4">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title">{{ offer.title }}</h5>
+                                <p class="card-text">Publiée le {{ offer.createdAt|date('d/m/Y') }}</p>
+                                <a href="{{ path('job_offer_show', {id: offer.id}) }}" class="btn btn-primary">Voir l'offre</a>
+                            </div>
+                        </div>
+                    </div>
+                {% else %}
+                    <p>Aucune offre récente disponible pour le moment.</p>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}

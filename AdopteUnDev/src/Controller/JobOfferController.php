@@ -3,9 +3,11 @@
 namespace App\Controller;
 
 use App\Entity\JobOffer;
+use App\Entity\Favorite;
 use App\Form\JobOfferType;
 use App\Service\MatchingService;
 use App\Repository\JobOfferRepository;
+use App\Repository\FavoriteRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -32,15 +34,6 @@ class JobOfferController extends AbstractController
         ]);
     }
 
-    // public function index(JobOfferRepository $jobOfferRepository): Response
-    // {
-    //     // Récupérer les offres d'emploi avec leurs technologies
-    //     $jobOffers = $jobOfferRepository->findJobOffersWithTechnologies();
-
-    //     return $this->render('job_offer/index.html.twig', [
-    //         'jobOffers' => $jobOffers,
-    //     ]);
-    // }
 
     #[Route('/company/job-offer', name: 'company_job_offer_index')]
     public function companyJobOffers(EntityManagerInterface $em): Response
@@ -120,6 +113,10 @@ class JobOfferController extends AbstractController
     {
 
         $user = $this->getUser();
+
+        if (!$user) {
+            return $this->redirectToRoute('app_login');
+        }
     
         if ($user && $jobOffer->getUser() !== $user) {
             $jobOffer->incrementViews();
@@ -127,8 +124,14 @@ class JobOfferController extends AbstractController
             $em->flush();
         }
 
+        $isFavorite = $em->getRepository(Favorite::class)->findOneBy([
+            'user' => $user,
+            'jobOffer' => $jobOffer,
+        ]);
+
         return $this->render('job_offer/show.html.twig', [
             'jobOffer' => $jobOffer,
+            'isFavorite' => $isFavorite !== null, // true si l'offre est un favori
         ]);
     }
 

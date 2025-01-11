@@ -3,16 +3,57 @@
 {% block title %}Developer Profile{% endblock %}
 
 {% block body %}
-    <h1>{{ developer.firstName }} {{ developer.lastName }}'s Profile</h1>
+    <div class="container mt-5">
+        <h1 class="text-center mb-4">{{ developer.firstName }} {{ developer.lastName }}'s Profile</h1>
 
-    <p>Average Rating: {{ averageRating }}</p>
+        <div class="card shadow-sm p-4 mb-5">
+            <div class="row">
+                <div class="col-md-4">
+                    <img src="{{ asset('uploads/avatars/' ~ developer.avatar) }}" alt="Avatar de {{ developer.firstName }}" class="img-fluid rounded-circle">
+                </div>
+                <div class="col-md-8">
+                    <p><strong>First Name:</strong> {{ developer.firstName }}</p>
+                    <p><strong>Last Name:</strong> {{ developer.lastName }}</p>
+                    <p><strong>Location:</strong> {{ developer.location }}</p>
+                    <p><strong>Experience Level:</strong> {{ developer.experienceLevel }}</p>
+                    <p><strong>Minimum Salary:</strong> {{ developer.minSalary }} €</p>
+                    <p><strong>Views:</strong> {{ developer.views }}</p>
+                    <p><strong>Created At:</strong> {{ developer.createdAt|date('d/m/Y H:i') }}</p>
+                </div>
+            </div>
+        </div>
 
-    <h2>Evaluations</h2>
-    <ul>
-        {% for evaluation in evaluations %}
-            <li>{{ evaluation.rating }} (Rated by: {{ evaluation.evaluator.firstName }} {{ evaluation.evaluator.lastName }})</li>
-        {% endfor %}
-    </ul>
+        <div class="mb-4">
+            <p><strong>Average Rating:</strong> {{ averageRating }}</p>
+        </div>
 
-    <a href="{{ path('developer_evaluate', {'id': developer.id}) }}">Evaluate this developer</a>
+        <h3 class="mb-3">Evaluations</h3>
+        <ul class="list-group mb-4">
+            {% for evaluation in evaluations %}
+                <li class="list-group-item">
+                    <strong>{{ evaluation.rating }}</strong> - Rated by: {{ evaluation.evaluator.firstName }} {{ evaluation.evaluator.lastName }}
+                </li>
+            {% else %}
+                <li class="list-group-item text-muted">No evaluations yet.</li>
+            {% endfor %}
+        </ul>
+
+        {% if is_granted('ROLE_DEVELOPER') %}
+            <div class="text-center">
+                <a href="{{ path('developer_evaluate', {'id': developer.id}) }}" class="btn btn-primary">Evaluate this developer</a>
+            </div>
+        {% endif %}
+
+        <div class="text-center mb-4">
+            {% if isFavorite %}
+                <form method="post" action="{{ path('remove_favorite_developer', {'id': developer.id}) }}">
+                    <button type="submit" class="btn btn-danger">Remove from Favorites</button>
+                </form>
+            {% else %}
+                <form method="post" action="{{ path('add_favorite_developer', {'id': developer.id}) }}">
+                    <button type="submit" class="btn btn-success">Add to Favorites</button>
+                </form>
+            {% endif %}
+        </div>
+    </div>
 {% endblock %}

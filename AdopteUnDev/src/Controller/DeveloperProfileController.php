@@ -3,6 +3,8 @@
 namespace App\Controller;
 
 use App\Entity\DeveloperProfile;
+use App\Entity\Favorite;
+use App\Repository\FavoriteRepository;
 use App\Form\DeveloperProfileType;
 use App\Form\EvaluationType;
 use Doctrine\ORM\EntityManagerInterface;
@@ -144,34 +146,8 @@ class DeveloperProfileController extends AbstractController
         }
     }
 
-    #[Route('/developer/profile/view/{id}', name: 'developer_profile_show')]
-    public function showById(int $id, EntityManagerInterface $em, ): Response
-    {
-        // Récupérer le profil du développeur par ID
-        $developerProfile = $em->getRepository(DeveloperProfile::class)->find($id);
-
-        if (!$developerProfile) {
-            throw $this->createNotFoundException('Profil non trouvé');
-        }
-
-        $user = $this->getUser();
-
-        if ($user && $developerProfile->getUser() !== $user) {
-            // Incrémenter les vues
-            $developerProfile->incrementViews();
-            $em->flush();
-        }
-
-        // Vous pouvez également récupérer les offres d'emploi correspondantes ici si nécessaire
-        // $matchingJobOffers = $this->matchingService->getMatchingJobOffers($developerProfile);
-
-        
-
-        return $this->render('developer_profile/show_by_id.html.twig', [
-            'developerProfile' => $developerProfile,
-            // 'matchingJobOffers' => $matchingJobOffers
-        ]);
-    }
+    
+    
 
 
     #[Route('/developer/{id}/evaluate', name: 'developer_evaluate')]
@@ -185,7 +161,7 @@ class DeveloperProfileController extends AbstractController
         $evaluator = $em->getRepository(DeveloperProfile::class)->findOneBy(['user' => $user]);
 
         if (!$evaluator) {
-            return $this->redirectToRoute('login');
+            return $this->redirectToRoute('app_login');
         }
         // Récupérer le développeur à évaluer
         $developer = $developerProfileRepository->find($id);
@@ -227,29 +203,51 @@ class DeveloperProfileController extends AbstractController
     }
 
     #[Route('/developer/{id}/profile', name: 'developer_profile')]
-    public function profile($id, DeveloperProfileRepository $developerProfileRepository, EvaluationRepository $evaluationRepository): Response
-    {
+    public function profile(
+        int $id,
+        DeveloperProfileRepository $developerProfileRepository,
+        EvaluationRepository $evaluationRepository,
+        EntityManagerInterface $entityManager
+    ): Response {
         $developer = $developerProfileRepository->find($id);
-
-        // Récupérer toutes les évaluations pour ce développeur
+    
+        if (!$developer) {
+            throw $this->createNotFoundException('Developer not found.');
+        }
+    
+        // Incrémentation des vues
+        $developer->incrementViews();
+        $entityManager->persist($developer);
+        $entityManager->flush();
+    
+        // Récupérer les évaluations
         $evaluations = $evaluationRepository->findBy(['evaluatedDeveloper' => $developer]);
-
-        // Calculer la moyenne des évaluations
+    
+        // Calcul de la moyenne des évaluations
         $averageRating = 0;
         if (count($evaluations) > 0) {
-            $sum = 0;
-            foreach ($evaluations as $evaluation) {
-                $sum += $evaluation->getRating();
-            }
+            $sum = array_sum(array_map(fn($evaluation) => $evaluation->getRating(), $evaluations));
             $averageRating = $sum / count($evaluations);
         }
-
+    
+        // Vérifier si le développeur est dans les favoris de l'utilisateur
+        $user = $this->getUser();
+        $isFavorite = false;
+        if ($user) {
+            $isFavorite = $entityManager->getRepository(Favorite::class)->findOneBy([
+                'user' => $user,
+                'developerProfile' => $developer,
+            ]) !== null;
+        }
+    
         return $this->render('developer_profile/profile2.html.twig', [
             'developer' => $developer,
             'averageRating' => $averageRating,
             'evaluations' => $evaluations,
+            'isFavorite' => $isFavorite,
         ]);
     }
+    
 
     #[Route('/developer/statistics', name: 'developer_statistics')]
     #[IsGranted('ROLE_DEVELOPER')]

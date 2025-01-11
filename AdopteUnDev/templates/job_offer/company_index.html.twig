@@ -2,19 +2,150 @@
 
 {% extends 'base.html.twig' %}
 
-{% block title %}Company Job Offers{% endblock %}
+{% block title %}Mes Offres d'Emploi{% endblock %}
 
 {% block body %}
-    <h1>Company Job Offers</h1>
-    <ul>
-        {% for jobOffer in jobOffers %}
-            <li>
-                <a href="{{ path('job_offer_show', { id: jobOffer.id }) }}">
-                    {{ jobOffer.title }} - {{ jobOffer.location }}
-                </a>
-            </li>
-        {% else %}
-            <p>No job offers found for your company.</p>
-        {% endfor %}
-    </ul>
+    <div class="container py-5">
+        <h1 class="text-center mb-4">Mes Offres d'Emploi</h1>
+
+        <table class="table table-bordered table-striped">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Titre</th>
+                    <th>Lieu</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for jobOffer in jobOffers %}
+                    <tr>
+                        <td>{{ jobOffer.id }}</td>
+                        <td>{{ jobOffer.title }}</td>
+                        <td>{{ jobOffer.location }}</td>
+                        <td>
+                            <a href="{{ path('job_offer_show', { id: jobOffer.id }) }}" class="btn btn-primary btn-sm">Voir</a>
+
+                            {% if app.user and app.user == jobOffer.user %}
+                                <a href="{{ path('job_offer_edit', { id: jobOffer.id }) }}" class="btn btn-warning btn-sm">Modifier</a>
+                                <form method="post" action="{{ path('job_offer_delete', { id: jobOffer.id }) }}" style="display:inline;" onsubmit="return confirm('Voulez-vous vraiment supprimer cette offre ?');">
+                                    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ jobOffer.id) }}">
+                                    <button type="submit" class="btn btn-danger btn-sm">Supprimer</button>
+                                </form>
+                            {% endif %}
+
+                            {% if app.user and 'ROLE_DEVELOPER' in app.user.roles %}
+                                <a href="{{ path('job_offer_apply', { id: jobOffer.id }) }}" class="btn btn-success btn-sm">Postuler</a>
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td colspan="4" class="text-center">Aucune offre d'emploi trouvée.</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        {% if app.user and 'ROLE_COMPANY' in app.user.roles %}
+            <div class="mt-4 text-center">
+                <a href="{{ path('job_offer_create') }}" class="btn btn-success btn-lg">Créer une nouvelle offre</a>
+            </div>
+        {% endif %}
+    </div>
+{% endblock %}
+
+{% block stylesheets %}
+    <style>
+        /* Style global */
+        body {
+            background-color: #f0f2f5;
+        }
+
+        /* Table Styling */
+        table {
+            background-color: white;
+        }
+
+        .table-bordered {
+            border: 1px solid #ddd;
+        }
+
+        .table-striped > tbody > tr:nth-child(odd) {
+            background-color: #f9f9f9;
+        }
+
+        /* Button Styling */
+        .btn-sm {
+            padding: 8px 12px;
+            font-size: 0.9rem;
+        }
+
+        .btn-lg {
+            padding: 15px 30px;
+            font-size: 1.2rem;
+        }
+
+        .btn-info {
+            background-color: #17a2b8;
+            color: white;
+        }
+
+        .btn-info:hover {
+            background-color: #138496;
+        }
+
+        .btn-success {
+            background-color: #28a745;
+            color: white;
+            font-weight: bold;
+        }
+
+        .btn-success:hover {
+            background-color: #218838;
+        }
+
+        .btn-primary {
+            background-color: #007bff;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: #0056b3;
+        }
+
+        .btn-warning {
+            background-color: #ffc107;
+            color: white;
+        }
+
+        .btn-warning:hover {
+            background-color: #e0a800;
+        }
+
+        .btn-danger {
+            background-color: #dc3545;
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background-color: #c82333;
+        }
+
+        .container {
+            background-color: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .table th, .table td {
+            vertical-align: middle;
+            text-align: center;
+        }
+
+        .text-center {
+            text-align: center;
+        }
+    </style>
 {% endblock %}

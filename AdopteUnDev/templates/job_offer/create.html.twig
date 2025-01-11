@@ -3,18 +3,57 @@
 {% block title %}Créer une Offre d'Emploi{% endblock %}
 
 {% block body %}
-<h1>Créer une Nouvelle Offre d'Emploi</h1>
+    <div class="container mt-5">
+        <h1 class="text-center mb-4">Créer une Nouvelle Offre d'Emploi</h1>
 
-{{ form_start(form) }}
-    {{ form_row(form.title) }}
-    {{ form_row(form.location) }}
-    {{ form_row(form.description) }}
-    
-    {# Ajout du champ pour les technologies #}
-    {{ form_row(form.technologies) }}
-    
-    <button type="submit" class="btn btn-primary">Créer</button>
-{{ form_end(form) }}
+        {{ form_start(form) }}
+            <div class="mb-3">
+                {{ form_row(form.title, {
+                    'label': 'Titre de l\'offre',
+                    'attr': {
+                        'class': 'form-control',
+                        'placeholder': 'Entrez le titre de l\'offre'
+                    }
+                }) }}
+            </div>
 
-<a href="{{ path('job_offer_index') }}" class="btn btn-secondary">Retour à la liste</a>
+            <div class="mb-3">
+                {{ form_row(form.location, {
+                    'label': 'Lieu de l\'offre',
+                    'attr': {
+                        'class': 'form-control',
+                        'placeholder': 'Entrez le lieu de l\'offre'
+                    }
+                }) }}
+            </div>
+
+            <div class="mb-3">
+                {{ form_row(form.description, {
+                    'label': 'Description de l\'offre',
+                    'attr': {
+                        'class': 'form-control',
+                        'placeholder': 'Entrez la description de l\'offre',
+                        'rows': 4
+                    }
+                }) }}
+            </div>
+
+            <div class="mb-3">
+                {{ form_row(form.technologies, {
+                    'label': 'Technologies',
+                    'attr': {
+                        'class': 'form-control'
+                    }
+                }) }}
+            </div>
+
+            <div class="text-center">
+                <button type="submit" class="btn btn-primary">Créer l'offre</button>
+            </div>
+        {{ form_end(form) }}
+
+        <div class="text-center mt-3">
+            <a href="{{ path('job_offer_index') }}" class="btn btn-secondary">Retour à la liste</a>
+        </div>
+    </div>
 {% endblock %}

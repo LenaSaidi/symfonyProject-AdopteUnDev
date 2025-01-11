@@ -3,32 +3,76 @@
 {% block title %}Mon Profil{% endblock %}
 
 {% block body %}
-    <h1>Mon Profil</h1>
+    <!-- Contenu principal du profil -->
+    <div class="container py-5">
+        <div class="row justify-content-center">
+            <div class="col-lg-8 col-md-10 col-12">
+                <div class="card shadow-lg border-0 rounded-lg">
+                    <div class="card-header bg-gradient text-white text-center rounded-top">
+                        <!-- Avatar centré en haut avec forme ronde et taille ajustée -->
+                        <div class="avatar-container mb-3">
+                            {% if developerProfile.avatar %}
+                                <img src="{{ asset('uploads/avatars/' ~ developerProfile.avatar) }}" alt="Avatar" class="img-fluid avatar-img rounded-circle" style="width: 100px; height: 100px; object-fit: cover;">
+                            {% else %}
+                                <span class="text-muted">Aucun avatar ajouté</span>
+                            {% endif %}
+                        </div>
+                        <!-- Nom en noir -->
+                        <h1 class="display-4" style="color: black;">{{ developerProfile.firstName }} {{ developerProfile.lastName }}</h1>
+                    </div>
+                    <div class="card-body">
+                        <div class="profile-info">
+                            <div class="mb-3">
+                                <p class="lead"><strong>Nom :</strong> {{ developerProfile.firstName }} {{ developerProfile.lastName }}</p>
+                                <p class="lead"><strong>Lieu :</strong> {{ developerProfile.location }}</p>
+                                <p class="lead"><strong>Technologies :</strong> 
+                                    {% if developerProfile.technologies is not empty %}
+                                        {{ developerProfile.technologies|map(tech => tech.name)|join(', ') }}
+                                    {% else %}
+                                        <span class="text-muted">Aucune technologie sélectionnée</span>
+                                    {% endif %}
+                                </p>
+                                <p class="lead"><strong>Niveau d'expérience :</strong> {{ developerProfile.experienceLevel }}</p>
+                                <p class="lead"><strong>Salaire souhaité :</strong> {{ developerProfile.minSalary }} €</p>
+                            </div>
+                            <div class="mb-3">
+                                <p class="lead"><strong>Biographie :</strong> 
+                                    {% if developerProfile.bio %}
+                                        {{ developerProfile.bio }}
+                                    {% else %}
+                                        <span class="text-muted">Aucune biographie ajoutée</span>
+                                    {% endif %}
+                                </p>
+                            </div>
+                        </div>
 
-    <p><strong>Nom :</strong> {{ developerProfile.firstName }} {{ developerProfile.lastName }}</p>
-    <p><strong>Location :</strong> {{ developerProfile.location }}</p>
-    <p><strong>Technologies :</strong> {{ developerProfile.technologies|map(tech => tech.name)|join(', ') }}</p>
-    <p><strong>Niveau d'expérience :</strong> {{ developerProfile.experienceLevel }}</p>
-    <p><strong>Salaire souhaité :</strong> {{ developerProfile.minSalary }} €</p>
+                        <h2 class="h3 mb-3">Offres d'Emploi Correspondantes</h2>
 
-    <h2>Offres d'Emploi Correspondantes</h2>
-    {% if matchingJobOffers is not empty %}
-        <ul>
-            {% for match in matchingJobOffers %}
-                <li>
-                    <strong>{{ match.jobOffer.title }}</strong><br>
-                    Location: {{ match.jobOffer.location }}<br>
-                    Technologies: {{ match.jobOffer.technologies|map(tech => tech.name)|join(', ') }}<br>
-                    Salaire minimum: {{ match.jobOffer.Salary }} €<br>
-                    Niveau d'expérience requis: {{ match.jobOffer.ExperienceRequired }}<br>
-                    Score: {{ match.score }}
-                </li>
-            {% endfor %}
-        </ul>
-    {% else %}
-        <p>Aucune offre d'emploi correspondante.</p>
-    {% endif %}
-
-    {# Bouton pour éditer le profil #}
-    <a href="{{ path('developer_profile_edit') }}" class="btn btn-primary">Modifier mon profil</a>
+                        {% if matchingJobOffers is not empty %}
+                            <ul class="list-group">
+                                {% for match in matchingJobOffers %}
+                                    <li class="list-group-item border-0 shadow-sm mb-3">
+                                        <div class="d-flex justify-content-between">
+                                            <h5 class="font-weight-bold">{{ match.jobOffer.title }}</h5>
+                                            <a href="{{ path('job_offer_show', {id: match.jobOffer.id}) }}" class="btn btn-outline-primary btn-sm">Voir l'offre</a>
+                                        </div>
+                                        <p class="text-muted mb-1"><strong>Lieu:</strong> {{ match.jobOffer.location }}</p>
+                                        <p class="text-muted mb-1"><strong>Technologies requises:</strong> {{ match.jobOffer.technologies|map(tech => tech.name)|join(', ') }}</p>
+                                        <p class="text-muted mb-1"><strong>Salaire minimum:</strong> {{ match.jobOffer.Salary }} €</p>
+                                        <p class="text-muted mb-1"><strong>Niveau d'expérience requis:</strong> {{ match.jobOffer.ExperienceRequired }}</p>
+                                        <p class="mb-0"><strong>Score de correspondance:</strong> {{ match.score }}</p>
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                        {% else %}
+                            <p class="text-muted">Aucune offre d'emploi correspondante.</p>
+                        {% endif %}
+                    </div>
+                    <div class="card-footer text-center">
+                        <a href="{{ path('developer_profile_edit') }}" class="btn btn-warning btn-lg">Modifier mon profil</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 {% endblock %}

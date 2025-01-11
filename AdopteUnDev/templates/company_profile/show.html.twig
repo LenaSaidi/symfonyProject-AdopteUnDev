@@ -1,31 +1,26 @@
-{# templates/company_profile/show.html.twig #}
 {% extends 'base.html.twig' %}
-{% block title %}{{ companyProfile.companyName }} - Profil{% endblock %}
+
+{% block title %}Profil de l'Entreprise{% endblock %}
 
 {% block body %}
-    <div class="profile-container">
-        <div class="profile-header">
-            <h1 class="company-name">{{ companyProfile.companyName }} - Profil</h1>
-            <p class="company-location"><strong>Location:</strong> {{ companyProfile.location }}</p>
-        </div>
-
-        <div class="profile-content">
-            <div class="profile-section">
-                <h2>Description</h2>
-                <p>{{ companyProfile.description }}</p>
+    <div class="container mt-5">
+        <h1 class="text-center mb-4">{{ companyProfile.companyName }}</h1>
+        
+        <div class="card shadow-sm p-4 mb-5">
+            <div class="company-details">
+                <p><strong>Lieu : </strong>{{ companyProfile.location }}</p>
+                <p><strong>Description : </strong>{{ companyProfile.description }}</p>
             </div>
 
-            <div class="profile-section">
-                <h2>Logo</h2>
-                {% if companyProfile.logo %}
-                    <img src="{{ asset('uploads/logos/' ~ companyProfile.logo) }}" alt="Logo" class="company-logo" />
-                {% else %}
-                    <p>No logo uploaded.</p>
+            <div class="company-logo text-center mb-4">
+                <img src="{{ asset('uploads/logos/' ~ companyProfile.logo) }}" alt="Logo de l'entreprise" class="img-fluid rounded-circle" style="max-width: 150px;">
+            </div>
+
+            <div class="profile-actions text-center">
+                {% if is_granted('ROLE_COMPANY') %}
+                    <a href="{{ path('company_profile_edit', {id: companyProfile.id}) }}" class="btn btn-primary btn-lg">Modifier le Profil</a>
                 {% endif %}
-            </div>
-
-            <div class="profile-actions">
-                <a href="{{ path('company_profile_edit', {id: companyProfile.id}) }}" class="btn btn-edit">Modifier le profil</a>
+                
             </div>
         </div>
     </div>

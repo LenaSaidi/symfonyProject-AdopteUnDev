@@ -27,36 +27,36 @@ class JobOfferRepository extends ServiceEntityRepository
      * @param array $criteria Les critères de recherche.
      * @return array Les offres d'emploi correspondantes.
      */
+    // public function findMatchingJobs(array $criteria): array
+    // {
+    //     $qb = $this->createQueryBuilder('j');
+
+    //     if (!empty($criteria['technologies'])) {
+    //         $qb->join('j.technologies', 't')
+    //            ->andWhere('t.name IN (:technologies)')
+    //            ->setParameter('technologies', $criteria['technologies']);
+    //     }
+
+    //     if (!empty($criteria['location'])) {
+    //         $qb->andWhere('j.location = :location')
+    //            ->setParameter('location', $criteria['location']);
+    //     }
+
+    //     if (!empty($criteria['minSalary'])) {
+    //         $qb->andWhere('j.minSalary >= :minSalary')
+    //            ->setParameter('minSalary', $criteria['minSalary']);
+    //     }
+
+    //     if (!empty($criteria['experienceLevel'])) {
+    //         $qb->andWhere('j.experienceLevel = :experienceLevel')
+    //            ->setParameter('experienceLevel', $criteria['experienceLevel']);
+    //     }
+
+    //     return $qb->getQuery()->getResult();
+    // }
+
+
     public function findMatchingJobs(array $criteria): array
-    {
-        $qb = $this->createQueryBuilder('j');
-
-        if (!empty($criteria['technologies'])) {
-            $qb->join('j.technologies', 't')
-               ->andWhere('t.name IN (:technologies)')
-               ->setParameter('technologies', $criteria['technologies']);
-        }
-
-        if (!empty($criteria['location'])) {
-            $qb->andWhere('j.location = :location')
-               ->setParameter('location', $criteria['location']);
-        }
-
-        if (!empty($criteria['minSalary'])) {
-            $qb->andWhere('j.minSalary >= :minSalary')
-               ->setParameter('minSalary', $criteria['minSalary']);
-        }
-
-        if (!empty($criteria['experienceLevel'])) {
-            $qb->andWhere('j.experienceLevel = :experienceLevel')
-               ->setParameter('experienceLevel', $criteria['experienceLevel']);
-        }
-
-        return $qb->getQuery()->getResult();
-    }
-
-
-    public function findByAdvancedCriteria(array $criteria): array
     {
         $qb = $this->createQueryBuilder('j')
             ->leftJoin('j.technologies', 't')
@@ -64,30 +64,27 @@ class JobOfferRepository extends ServiceEntityRepository
 
         if (!empty($criteria['technologies'])) {
             $qb->andWhere('t.name IN (:technologies)')
-               ->setParameter('technologies', $criteria['technologies']);
+                ->setParameter('technologies', $criteria['technologies']);
         }
 
         if (!empty($criteria['location'])) {
             $qb->andWhere('j.location = :location')
-               ->setParameter('location', $criteria['location']);
+                ->setParameter('location', $criteria['location']);
         }
 
         if (!empty($criteria['minSalary'])) {
             $qb->andWhere('j.salary >= :minSalary')
-               ->setParameter('minSalary', $criteria['minSalary']);
+                ->setParameter('minSalary', $criteria['minSalary']);
         }
 
         if (!empty($criteria['experienceLevel'])) {
             $qb->andWhere('j.experienceRequired >= :experienceLevel')
-               ->setParameter('experienceLevel', $criteria['experienceLevel']);
+                ->setParameter('experienceLevel', $criteria['experienceLevel']);
         }
-
-        dump($qb->getQuery()->getSQL());  // Affiche la requête SQL générée
-        dump($qb->getParameters());       // Affiche les paramètres envoyés
-
 
         return $qb->getQuery()->getResult();
     }
+    
 
     public function findMostPopularOffers(int $limit = 5)
     {

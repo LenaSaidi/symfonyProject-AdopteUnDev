@@ -33,8 +33,12 @@
                         {% endif %}
                     </td>
                     <td>
-                        <a href="{{ path('developer_profile_show', { id: developerProfile.id }) }}" class="btn btn-primary">Voir</a>
-                        <a href="{{ path('developer_evaluate', { id: developerProfile.id }) }}" class="btn btn-warning">Évaluer</a>
+                        <a href="{{ path('developer_profile', { id: developerProfile.id }) }}" class="btn btn-primary">Voir</a>
+
+                        {# Vérifie si l'utilisateur a le rôle de développeur pour afficher le bouton d'évaluation #}
+                        {% if 'ROLE_DEVELOPER' in app.user.roles %}
+                            <a href="{{ path('developer_evaluate', { id: developerProfile.id }) }}" class="btn btn-warning">Évaluer</a>
+                        {% endif %}
                     </td>
                 </tr>
             {% else %}

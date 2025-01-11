@@ -53,16 +53,43 @@ class CompanyProfileController extends AbstractController
     #[Route('/company/profile/{id}', name: 'company_profile_show')]
     public function show(int $id, EntityManagerInterface $em)
     {
-        $companyProfile = $em->getRepository(CompanyProfile::class)->find($id);
-
+        // Recherche du profil d'entreprise par l'ID passé dans l'URL
+        $companyProfile = $em->getRepository(CompanyProfile::class)
+        ->findOneBy(['user' => $id]);
+    
+        // Si le profil n'existe pas, lancer une exception
         if (!$companyProfile) {
             throw $this->createNotFoundException('Profile not found');
         }
-
+    
+        // Renvoyer la vue avec les informations du profil
         return $this->render('company_profile/show.html.twig', [
             'companyProfile' => $companyProfile,
         ]);
     }
+    
+    
+
+    // #[Route('/company/profile', name: 'my_company_profile_show')]
+    // public function showMyCompany(int $id, EntityManagerInterface $em)
+    // {
+    //     $user = $this->getUser();
+
+    //     if (!$user) {
+    //         return $this->redirectToRoute('app_login');
+    //     }
+
+    //     $companyProfile = $em->getRepository(CompanyProfile::class)->findOneBy(['user' => $user]);
+      
+
+    //     if (!$companyProfile) {
+    //         throw $this->createNotFoundException('Profile not found');
+    //     }
+
+    //     return $this->render('company_profile/show.html.twig', [
+    //         'companyProfile' => $companyProfile,
+    //     ]);
+    // }
 
     #[Route('/company/profile/{id}/edit', name: 'company_profile_edit')]
     public function edit(CompanyProfile $companyProfile, Request $request, EntityManagerInterface $em, SluggerInterface $slugger): Response

@@ -1,15 +1,48 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Register{% endblock %}
+{% block title %}Register!{% endblock %}
 
 {% block body %}
-<h1>Register</h1>
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <h1 class="h3 mb-3 font-weight-normal text-center">Create your account</h1>
 
-{{ form_start(form) }}
-    {{ form_row(form.email) }}
-    {{ form_row(form.password.first) }}
-    {{ form_row(form.password.second) }}
-    {{ form_row(form.role) }}
-    {{ form_row(form.register) }}
-{{ form_end(form) }}
+            <!-- Formulaire d'inscription -->
+            {{ form_start(form) }}
+
+            <div class="form-group">
+                {{ form_label(form.email) }}
+                {{ form_widget(form.email, {'attr': {'class': 'form-control', 'placeholder': 'Enter your email'}}) }}
+            </div>
+
+            <div class="form-group">
+                {{ form_label(form.password.first) }}
+                {{ form_widget(form.password.first, {'attr': {'class': 'form-control', 'placeholder': 'Enter your password'}}) }}
+            </div>
+
+            <div class="form-group">
+                {{ form_label(form.password.second) }}
+                {{ form_widget(form.password.second, {'attr': {'class': 'form-control', 'placeholder': 'Confirm your password'}}) }}
+            </div>
+
+            <div class="form-group">
+                {{ form_label(form.role) }}
+                {{ form_widget(form.role, {'attr': {'class': 'form-control'}}) }}
+            </div>
+
+            <div class="form-group text-center">
+                {{ form_widget(form.register, {'attr': {'class': 'btn btn-lg btn-primary btn-block'}}) }}
+            </div>
+
+            {{ form_end(form) }}
+
+            <!-- Lien vers la page de connexion -->
+            <div class="text-center mt-3">
+                <p>Already have an account? <a href="{{ path('app_login') }}">Login here</a>.</p>
+            </div>
+
+        </div>
+    </div>
+</div>
 {% endblock %}

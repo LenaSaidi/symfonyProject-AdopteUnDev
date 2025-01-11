@@ -3,25 +3,122 @@
 {% block title %}Détails du Profil Développeur{% endblock %}
 
 {% block body %}
-    <h1>{{ developerProfile.firstName }} {{ developerProfile.lastName }}</h1>
+    <div class="container py-5">
+        <div class="row justify-content-center">
+            <div class="col-lg-8 col-md-10 col-12">
+                <div class="card shadow-lg border-0 rounded-lg">
+                    <div class="card-header text-center bg-gradient text-white rounded-top">
+                        <h1 class="display-4">{{ developerProfile.firstName }} {{ developerProfile.lastName }}</h1>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-4">
+                            <p class="lead"><strong>Lieu :</strong> <span class="text-muted">{{ developerProfile.location }}</span></p>
+                            <p class="lead"><strong>Niveau d'expérience :</strong> <span class="text-muted">{{ developerProfile.experienceLevel }}</span></p>
+                            <p class="lead"><strong>Salaire minimum :</strong> <span class="text-muted">{{ developerProfile.minSalary }} €</span></p>
+                            <p class="text-muted"><strong>Créé le :</strong> {{ developerProfile.createdAt|date('d/m/Y H:i') }}</p>
+                        </div>
 
-    <p><strong>Lieu :</strong> {{ developerProfile.location }}</p>
-    <p><strong>Niveau d'expérience :</strong> {{ developerProfile.experienceLevel }}</p>
-    <p><strong>Salaire minimum :</strong> {{ developerProfile.minSalary }} €</p>
-    <p><strong>Créé le :</strong> {{ developerProfile.createdAt|date('d/m/Y H:i') }}</p>
-    
-    <h3>Technologies :</h3>
-    <ul>
-        {% for technology in developerProfile.technologies %}
-            <li>{{ technology.name }}</li>
-        {% else %}
-            <li>Aucune technologie sélectionnée</li>
-        {% endfor %}
-    </ul>
+                        <div class="mb-4">
+                            <h3 class="h4 mb-3">Technologies :</h3>
+                            <div class="badge-container">
+                                {% for technology in developerProfile.technologies %}
+                                    <span class="badge bg-primary me-2 mb-2">{{ technology.name }}</span>
+                                {% else %}
+                                    <span class="badge bg-secondary">Aucune technologie sélectionnée</span>
+                                {% endfor %}
+                            </div>
+                        </div>
 
-    <a href="{{ path('developer_profile_index') }}" class="btn btn-secondary">Retour à la liste</a>
+                        <div class="d-flex justify-content-between mt-4">
+                            <a href="{{ path('developer_profile_index') }}" class="btn btn-outline-primary btn-lg">Retour à la liste</a>
 
-    {% if app.user and app.user == developerProfile.user %}
-        <a href="{{ path('developer_profile_edit', { id: developerProfile.id }) }}" class="btn btn-warning">Modifier</a>
-    {% endif %}
+                            {% if app.user and app.user == developerProfile.user %}
+                                <a href="{{ path('developer_profile_edit', { id: developerProfile.id }) }}" class="btn btn-warning btn-lg">Modifier</a>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block stylesheets %}
+    <style>
+        /* Gradient background header */
+        .bg-gradient {
+            background: linear-gradient(90deg, rgba(99, 99, 255, 1) 0%, rgba(102, 204, 255, 1) 100%);
+        }
+
+        /* Card and content styles */
+        .card {
+            border-radius: 15px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .card-header h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+        }
+
+        .lead {
+            font-size: 1.2rem;
+            color: #555;
+        }
+
+        .text-muted {
+            font-weight: 400;
+            color: #6c757d;
+        }
+
+        /* Badge container for technologies */
+        .badge-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .badge {
+            font-size: 1rem;
+            padding: 10px 15px;
+            border-radius: 25px;
+            text-transform: capitalize;
+        }
+
+        .btn {
+            font-size: 1.1rem;
+            padding: 10px 25px;
+            border-radius: 30px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-outline-primary:hover {
+            background-color: #007bff;
+            color: #fff;
+        }
+
+        .btn-warning:hover {
+            background-color: #e0a800;
+            color: #fff;
+        }
+
+        .btn-lg {
+            font-size: 1.25rem;
+            padding: 15px 30px;
+        }
+
+        /* Spacing and margins */
+        .mb-4 {
+            margin-bottom: 30px;
+        }
+
+        .mt-4 {
+            margin-top: 30px;
+        }
+
+        .d-flex {
+            display: flex;
+            justify-content: space-between;
+        }
+    </style>
 {% endblock %}

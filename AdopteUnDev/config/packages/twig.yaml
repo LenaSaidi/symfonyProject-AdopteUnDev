@@ -1,6 +1,15 @@
 twig:
     file_name_pattern: '*.twig'
 
+    cache: false
+
+
+# Environnement de développement
+when@dev:
+    twig:
+        strict_variables: true
+
+# Environnement de test
 when@test:
     twig:
         strict_variables: true
