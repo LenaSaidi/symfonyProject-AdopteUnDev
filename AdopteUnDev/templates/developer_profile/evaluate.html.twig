@@ -3,10 +3,22 @@
 {% block title %}Evaluate Developer{% endblock %}
 
 {% block body %}
-    <h1>Evaluate Developer: {{ developer.firstName }} {{ developer.lastName }}</h1>
+    <div class="container mt-5">
+        <h1 class="text-center mb-4">Evaluate Developer: <span class="text-primary">{{ developer.firstName }} {{ developer.lastName }}</span></h1>
 
-    {{ form_start(form) }}
-        {{ form_row(form.rating) }}
-        <button class="btn btn-primary">Submit Evaluation</button>
-    {{ form_end(form) }}
+        <div class="card shadow-sm p-4">
+            <h3 class="mb-4">Provide your evaluation below</h3>
+
+            {{ form_start(form) }}
+                <div class="mb-3">
+                    <label for="{{ form.rating.vars.id }}" class="form-label"><strong>Rating</strong></label>
+                    {{ form_widget(form.rating, {'attr': {'class': 'form-control'}}) }}
+                </div>
+
+                <div class="text-center">
+                    <button class="btn btn-success">Submit Evaluation</button>
+                </div>
+            {{ form_end(form) }}
+        </div>
+    </div>
 {% endblock %}

@@ -1,0 +1,54 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}My Favorites{% endblock %}
+
+{% block body %}
+<div class="container mt-5">
+    <h1 class="text-center mb-4">My Favorites</h1>
+
+    {% if favorites|length > 0 %}
+        <!-- Section des favoris développeurs -->
+        <h2 class="mt-4">Favorite Developers</h2>
+        <ul class="list-group mb-4">
+            {% set hasDevelopers = false %}
+            {% for favorite in favorites %}
+                {% if favorite.developerProfile %}
+                    {% set hasDevelopers = true %}
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <div>
+                            <strong>Developer: {{ favorite.developerProfile.firstName }} {{ favorite.developerProfile.lastName }}</strong>
+                            <p class="mb-0">{{ favorite.developerProfile.location }}</p>
+                        </div>
+                        <a href="{{ path('developer_profile', {'id': favorite.developerProfile.id}) }}" class="btn btn-primary">View Profile</a>
+                    </li>
+                {% endif %}
+            {% endfor %}
+            {% if not hasDevelopers %}
+                <li class="list-group-item text-muted">No favorite developers yet.</li>
+            {% endif %}
+        </ul>
+
+        <!-- Section des favoris offres d'emploi -->
+        <h2 class="mt-4">Favorite Job Offers</h2>
+        <ul class="list-group">
+            {% set hasJobOffers = false %}
+            {% for favorite in favorites %}
+                {% if favorite.jobOffer %}
+                    {% set hasJobOffers = true %}
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <div>
+                            <strong>Job Offer: {{ favorite.jobOffer.title }}</strong>
+                        </div>
+                        <a href="{{ path('job_offer_show', {'id': favorite.jobOffer.id}) }}" class="btn btn-primary">View Job Offer</a>
+                    </li>
+                {% endif %}
+            {% endfor %}
+            {% if not hasJobOffers %}
+                <li class="list-group-item text-muted">No favorite job offers yet.</li>
+            {% endif %}
+        </ul>
+    {% else %}
+        <p class="text-muted text-center">You have no favorites yet.</p>
+    {% endif %}
+</div>
+{% endblock %}

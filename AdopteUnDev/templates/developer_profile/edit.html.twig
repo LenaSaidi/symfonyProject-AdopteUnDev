@@ -3,25 +3,81 @@
 {% block title %}Modifier le Profil Développeur{% endblock %}
 
 {% block body %}
-    <h1>Modifier le Profil de {{ developerProfile.firstName }} {{ developerProfile.lastName }}</h1>
+    <!-- Navbar déjà définie dans 'base.html.twig', donc elle est héritée ici -->
 
-    {{ form_start(form) }}
-        {{ form_row(form.firstName) }}
-        {{ form_row(form.lastName) }}
-        {{ form_row(form.location) }}
-        {{ form_row(form.experienceLevel) }}
-        {{ form_row(form.minSalary) }}
-        
-        <h3>Technologies :</h3>
-        <ul>
-            {% for technology in developerProfile.technologies %}
-                <li>{{ technology.name }}</li>
-            {% endfor %}
-        </ul>
-        {{ form_row(form.technologies) }}
+    <div class="container py-5">
+        <div class="row justify-content-center">
+            <div class="col-lg-8 col-md-10 col-12">
+                <div class="card shadow-lg border-0 rounded-lg">
+                    <div class="card-header bg-gradient text-white text-center rounded-top">
+                        <div class="avatar-container mb-3">
+                            {% if developerProfile.avatar %}
+                                <img src="{{ asset('uploads/avatars/' ~ developerProfile.avatar) }}" alt="Avatar" class="img-fluid avatar-img rounded-circle" style="width: 100px; height: 100px; object-fit: cover;">
+                            {% else %}
+                                <span class="text-muted">Aucun avatar ajouté</span>
+                            {% endif %}
+                        </div>
+                        <h2 class="h3" style="color: black;">Modifier le Profil de {{ developerProfile.firstName }} {{ developerProfile.lastName }}</h2>
+                    </div>
+                    <div class="card-body">
+                        <!-- Formulaire de modification du profil -->
+                        {{ form_start(form) }}
+                            
 
-        <button type="submit" class="btn btn-primary">Sauvegarder les modifications</button>
-    {{ form_end(form) }}
+                            <!-- Informations personnelles -->
+                            <div class="mb-4">
+                                {{ form_row(form.firstName, { 'label': 'Prénom', 'attr': { 'class': 'form-control' } }) }}
+                            </div>
+                            <div class="mb-4">
+                                {{ form_row(form.lastName, { 'label': 'Nom', 'attr': { 'class': 'form-control' } }) }}
+                            </div>
+                            <div class="mb-4">
+                                {{ form_row(form.location, { 'label': 'Lieu', 'attr': { 'class': 'form-control' } }) }}
+                            </div>
+                            <div class="mb-4">
+                                {{ form_row(form.experienceLevel, { 'label': 'Niveau d\'expérience', 'attr': { 'class': 'form-control' } }) }}
+                            </div>
+                            <div class="mb-4">
+                                {{ form_row(form.minSalary, { 'label': 'Salaire souhaité', 'attr': { 'class': 'form-control' } }) }}
+                            </div>
 
-    <a href="{{ path('my_profile_show') }}" class="btn btn-secondary">Retour au profil</a>
+                            <!-- Section Technologies -->
+                            <h3 class="mt-4">Technologies :</h3>
+                            <ul class="list-group mb-4">
+                                {% for technology in developerProfile.technologies %}
+                                    <li class="list-group-item">
+                                        {{ technology.name }}
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                            {{ form_row(form.technologies) }}
+
+                            <!-- Section Biographie -->
+                            <h3 class="mt-4">Biographie :</h3>
+                            <div class="mb-4">
+                                {{ form_row(form.bio, { 'label': 'Biographie', 'attr': { 'class': 'form-control' } }) }}
+                            </div>
+
+                            <!-- Section Avatar -->
+                            <h3 class="mt-4">Avatar :</h3>
+                            <div class="mb-4">
+                                {{ form_row(form.avatar, { 'label': 'Télécharger un avatar', 'attr': { 'class': 'form-control' } }) }}
+                            </div>
+
+                            <!-- Bouton de soumission -->
+                            <div class="text-center mt-4">
+                                <button type="submit" class="btn btn-success btn-lg">Sauvegarder les modifications</button>
+                            </div>
+                        {{ form_end(form) }}
+
+                        <!-- Retour au profil -->
+                        <div class="text-center mt-3">
+                            <a href="{{ path('my_profile_show') }}" class="btn btn-secondary btn-lg">Retour au profil</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
 {% endblock %}

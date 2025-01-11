@@ -3,19 +3,45 @@
 {% block title %}Accueil Entreprises{% endblock %}
 
 {% block body %}
-    <h1>Accueil Entreprises</h1>
+<div class="container mt-5">
+    <h1 class="text-center mb-4">Accueil Entreprises</h1>
 
-    <h2>Profils les plus consultés</h2>
-    <ul>
-        {% for profile in mostViewedProfiles %}
-            <li>{{ profile.firstName }} {{ profile.lastName }} - {{ profile.views }} vues</li>
-        {% endfor %}
-    </ul>
+    <div class="row">
+        <!-- Section des profils les plus consultés -->
+        <div class="col-md-6">
+            <h2 class="text-primary">Profils les plus consultés</h2>
+            <ul class="list-group">
+                {% for profile in mostViewedProfiles %}
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <div>
+                            <strong>{{ profile.firstName }} {{ profile.lastName }}</strong>
+                            <span class="badge bg-primary rounded-pill">{{ profile.views }} vues</span>
+                        </div>
+                        <a href="{{ path('developer_profile', { id: profile.id }) }}" class="btn btn-sm btn-outline-primary">Consulter</a>
+                    </li>
+                {% else %}
+                    <li class="list-group-item text-muted">Aucun profil consulté pour le moment.</li>
+                {% endfor %}
+            </ul>
+        </div>
 
-    <h2>Derniers profils créés</h2>
-    <ul>
-        {% for profile in latestProfiles %}
-            <li>{{ profile.firstName }} {{ profile.lastName }} - Créé le {{ profile.createdAt|date('d/m/Y') }}</li>
-        {% endfor %}
-    </ul>
+        <!-- Section des derniers profils créés -->
+        <div class="col-md-6">
+            <h2 class="text-success">Derniers profils créés</h2>
+            <ul class="list-group">
+                {% for profile in latestProfiles %}
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <div>
+                            <strong>{{ profile.firstName }} {{ profile.lastName }}</strong>
+                            <small class="text-muted">Créé le {{ profile.createdAt|date('d/m/Y') }}</small>
+                        </div>
+                        <a href="{{ path('developer_profile', { id: profile.id }) }}" class="btn btn-sm btn-outline-success">Consulter</a>
+                    </li>
+                {% else %}
+                    <li class="list-group-item text-muted">Aucun profil récent.</li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+</div>
 {% endblock %}
