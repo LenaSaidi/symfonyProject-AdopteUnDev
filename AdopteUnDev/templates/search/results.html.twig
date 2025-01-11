@@ -2,6 +2,84 @@
 
 {% block title %}Search Results{% endblock %}
 
+{% block stylesheets %}
+    <style>
+        /* Style pour la page des résultats de recherche */
+        .search-results {
+            max-width: 900px;
+            margin: 30px auto;
+            padding: 20px;
+            background-color: #f9f9f9;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .search-results h1 {
+            text-align: center;
+            color: #333;
+            font-size: 2rem;
+        }
+
+        .search-results h2 {
+            margin-top: 30px;
+            color: #007bff;
+            font-size: 1.5rem;
+        }
+
+        .search-results ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .search-results li {
+            background-color: #fff;
+            margin-bottom: 20px;
+            padding: 15px;
+            border-radius: 6px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .search-results li strong {
+            color: #333;
+        }
+
+        .search-results li p {
+            color: #555;
+        }
+
+        .search-results li a {
+            display: inline-block;
+            margin-top: 10px;
+            padding: 8px 15px;
+            background-color: #007bff;
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+            font-weight: bold;
+            transition: background-color 0.3s;
+        }
+
+        .search-results li a:hover {
+            background-color: #0056b3;
+        }
+
+        .search-results li a:focus {
+            outline: none;
+        }
+
+        .search-results li p {
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+
+        .search-results p {
+            font-size: 16px;
+            color: #666;
+        }
+
+    </style>
+{% endblock %}
+
 {% block body %}
     <h1>Search Results</h1>
 
@@ -16,13 +94,14 @@
                         <li>
                             <strong>Name:</strong> {{ developer.firstName }} {{ developer.lastName }}<br>
                             <strong>Location:</strong> {{ developer.location }}<br>
-                            <p>Technologies : 
+                            <p>Technologies: 
                                 {% for tech in developer.technologies %}
                                     {{ tech.name }}{% if not loop.last %}, {% endif %}
                                 {% endfor %}
                             </p>
                             <strong>Experience Level:</strong> {{ developer.experienceLevel }}<br>
                             <strong>Salary:</strong> {{ developer.minSalary }}<br>
+                            <a href="{{ path('developer_profile', {id: developer.id}) }}">View Developer</a>
                         </li>
                     {% endfor %}
                 </ul>
@@ -41,12 +120,13 @@
                             <strong>Location:</strong> {{ job.location }}<br>
                             <strong>Salary:</strong> {{ job.salary }}<br>
                             <strong>Experience Level:</strong> {{ job.experienceRequired }}<br>
-                            <p>Technologies : 
+                            <p>Technologies: 
                                 {% for tech in job.technologies %}
                                     {{ tech.name }}{% if not loop.last %}, {% endif %}
                                 {% endfor %}
                             </p>
                             <strong>Description:</strong> {{ job.description }}<br>
+                            <a href="{{ path('job_offer_show', {id: job.id}) }}">View Job Offer</a>
                         </li>
                     {% endfor %}
                 </ul>

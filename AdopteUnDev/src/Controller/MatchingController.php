@@ -20,9 +20,7 @@ class MatchingController extends AbstractController
     #[Route('/match/profiles', name: 'suggest_profiles')]
     public function matchProfiles(Request $request): Response
     {
-        dump($request->query->all()); // Pour les paramètres GET
-        dump($request->request->all()); // Pour les paramètres POST
-        dump($request->getContent()); // Pour le corps brut (JSON, etc.)
+
         
         // Extraire les critères de la requête
         $criteria = [
@@ -32,8 +30,7 @@ class MatchingController extends AbstractController
             'experienceLevel' => (int) $request->query->get('experienceLevel', 0),
         ];
 
-        dump($criteria);
-
+    
         // Ici, vous devrez peut-être créer un objet JobOffer à partir des critères.
         $jobOffer = new JobOffer();
         $jobOffer->setTechnology($criteria['technology']);

@@ -12,7 +12,7 @@ class JobOfferRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, JobOffer::class);
     }
-
+    
     public function findJobOffersWithTechnologies()
     {
         $qb = $this->createQueryBuilder('j')
@@ -21,39 +21,7 @@ class JobOfferRepository extends ServiceEntityRepository
 
         return $qb->getQuery()->getResult();
     }
-    /**
-     * Rechercher des offres d'emploi correspondant aux critères.
-     *
-     * @param array $criteria Les critères de recherche.
-     * @return array Les offres d'emploi correspondantes.
-     */
-    // public function findMatchingJobs(array $criteria): array
-    // {
-    //     $qb = $this->createQueryBuilder('j');
 
-    //     if (!empty($criteria['technologies'])) {
-    //         $qb->join('j.technologies', 't')
-    //            ->andWhere('t.name IN (:technologies)')
-    //            ->setParameter('technologies', $criteria['technologies']);
-    //     }
-
-    //     if (!empty($criteria['location'])) {
-    //         $qb->andWhere('j.location = :location')
-    //            ->setParameter('location', $criteria['location']);
-    //     }
-
-    //     if (!empty($criteria['minSalary'])) {
-    //         $qb->andWhere('j.minSalary >= :minSalary')
-    //            ->setParameter('minSalary', $criteria['minSalary']);
-    //     }
-
-    //     if (!empty($criteria['experienceLevel'])) {
-    //         $qb->andWhere('j.experienceLevel = :experienceLevel')
-    //            ->setParameter('experienceLevel', $criteria['experienceLevel']);
-    //     }
-
-    //     return $qb->getQuery()->getResult();
-    // }
 
 
     public function findMatchingJobs(array $criteria): array
