@@ -2,10 +2,81 @@
 
 {% block title %}Advanced Search{% endblock %}
 
+{% block stylesheets %}
+    <style>
+        /* Style du formulaire de recherche */
+        .advanced-search-form {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f4f4f4;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .advanced-search-form label {
+            font-size: 14px;
+            font-weight: bold;
+            margin-bottom: 8px;
+            display: block;
+            color: #333;
+        }
+
+        .advanced-search-form input,
+        .advanced-search-form select {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 16px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+
+        .advanced-search-form input[type="number"] {
+            -moz-appearance: textfield;
+            -webkit-appearance: none;
+        }
+
+        .advanced-search-form input[type="number"]::-webkit-outer-spin-button,
+        .advanced-search-form input[type="number"]::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
+        .advanced-search-form button {
+            width: 100%;
+            padding: 12px;
+            background-color: #007bff;
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .advanced-search-form button:hover {
+            background-color: #0056b3;
+        }
+
+        .advanced-search-form input::placeholder {
+            color: #888;
+        }
+
+        .advanced-search-form input:focus,
+        .advanced-search-form select:focus,
+        .advanced-search-form button:focus {
+            outline: none;
+            border-color: #007bff;
+        }
+    </style>
+{% endblock %}
+
 {% block body %}
     <h1>Advanced Search</h1>
 
-    <form method="get" action="{{ path('search_results') }}">
+    <form method="get" action="{{ path('search_results') }}" class="advanced-search-form">
         <label for="type">Type:</label>
         <select name="type" id="type">
             <option value="all">All</option>
@@ -14,7 +85,7 @@
         </select>
 
         <label for="technologies">Technologies:</label>
-        <input type="text" name="technologies[]" id="technologies" placeholder="e.g., PHP, JavaScript">
+        <input type="text" name="technologies" id="technologies" placeholder="e.g., PHP, JavaScript">
 
         <label for="location">Location:</label>
         <input type="text" name="location" id="location" placeholder="Location">
