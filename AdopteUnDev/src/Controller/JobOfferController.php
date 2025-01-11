@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\JobOffer;
 use App\Entity\Favorite;
+use App\Entity\Matching;
 use App\Form\JobOfferType;
 use App\Service\MatchingService;
 use App\Repository\JobOfferRepository;
@@ -142,13 +143,20 @@ class JobOfferController extends AbstractController
         if ($jobOffer->getUser() !== $user) {
             throw $this->createAccessDeniedException('Vous ne pouvez supprimer que vos propres offres.');
         }
-
+    
+        // Supprimer les correspondances liées à cette offre d'emploi
+        $matches = $em->getRepository(Matching::class)->findBy(['jobOffer' => $jobOffer]);
+        foreach ($matches as $match) {
+            $em->remove($match);  // Supprimer chaque correspondance
+        }
+    
+        // Supprimer l'offre d'emploi elle-même
         $em->remove($jobOffer);
         $em->flush();
-
+    
         return $this->redirectToRoute('company_job_offer_index');
     }
-
+    
     #[Route('/jobOffer/{id}/matches', name: 'job_offer_matches')]
     public function showMatches(JobOffer $jobOffer): Response
     {

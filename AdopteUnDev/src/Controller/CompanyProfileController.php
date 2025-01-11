@@ -3,7 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\CompanyProfile;
-use App\Entity\JobOffer; 
+use App\Entity\JobOffer;  
 use App\Form\CompanyProfileType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -70,42 +70,25 @@ class CompanyProfileController extends AbstractController
     
     
 
-    // #[Route('/company/profile', name: 'my_company_profile_show')]
-    // public function showMyCompany(int $id, EntityManagerInterface $em)
-    // {
-    //     $user = $this->getUser();
-
-    //     if (!$user) {
-    //         return $this->redirectToRoute('app_login');
-    //     }
-
-    //     $companyProfile = $em->getRepository(CompanyProfile::class)->findOneBy(['user' => $user]);
-      
-
-    //     if (!$companyProfile) {
-    //         throw $this->createNotFoundException('Profile not found');
-    //     }
-
-    //     return $this->render('company_profile/show.html.twig', [
-    //         'companyProfile' => $companyProfile,
-    //     ]);
-    // }
 
     #[Route('/company/profile/{id}/edit', name: 'company_profile_edit')]
-    public function edit(CompanyProfile $companyProfile, Request $request, EntityManagerInterface $em, SluggerInterface $slugger): Response
+    public function edit(int $id, Request $request, EntityManagerInterface $em, SluggerInterface $slugger): Response
     {
+        $companyProfile = $em->getRepository(CompanyProfile::class)
+            ->findOneBy(['id' => $id]);  // Utiliser l'ID du profil ici
+     
         $form = $this->createForm(CompanyProfileType::class, $companyProfile);
         $form->handleRequest($request);
-    
+     
         if ($form->isSubmitted() && $form->isValid()) {
             $logo = $form->get('logo')->getData();
-    
+     
             if ($logo) {
                 // Générez un nom unique pour le fichier
                 $originalFilename = pathinfo($logo->getClientOriginalName(), PATHINFO_FILENAME);
                 $safeFilename = $slugger->slug($originalFilename); // Génère un nom de fichier sûr
                 $newFilename = $safeFilename.'-'.uniqid().'.'.$logo->guessExtension();
-    
+     
                 // Déplacez le fichier dans le répertoire des avatars
                 try {
                     $logo->move(
@@ -115,23 +98,24 @@ class CompanyProfileController extends AbstractController
                 } catch (FileException $e) {
                     // Gérer l'erreur si le fichier ne peut pas être déplacé
                 }
-    
+     
                 // Mettre à jour le chemin de l'avatar dans l'entité
                 $companyProfile->setLogo($newFilename);
             }
-    
+     
             // Sauvegarde dans la base de données
             $em->flush();
-    
-            // Redirection vers la page du profil
-            return $this->redirectToRoute('company_profile_show', ['id' => $companyProfile->getId()]);
+     
+            // Redirection vers la page du profil de l'utilisateur (pas du profil)
+            return $this->redirectToRoute('company_profile_show', ['id' => $companyProfile->getUser()->getId()]);
         }
-    
+     
         return $this->render('company_profile/edit.html.twig', [
             'form' => $form->createView(),
             'companyProfile' => $companyProfile,
         ]);
     }
+    
 
     #[Route('/company/statistics', name: 'company_statistics')]
     #[IsGranted('ROLE_COMPANY')]
